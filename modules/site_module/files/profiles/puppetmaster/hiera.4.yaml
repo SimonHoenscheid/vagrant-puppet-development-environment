@@ -1,0 +1,7 @@
+---
+:backends:
+  - yaml
+:hierarchy:
+  - "nodes/%{::fqdn}"
+  - common
+:merge_behavior: deeper

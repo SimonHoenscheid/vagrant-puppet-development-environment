@@ -1,0 +1,9 @@
+---
+:backends:
+  - yaml
+:yaml:
+  :datadir: /etc/puppet/environments/production/hieradata
+:hierarchy:
+  - "nodes/%{::fqdn}"
+  - common
+:merge_behavior: deeper
