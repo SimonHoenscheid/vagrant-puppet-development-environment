@@ -41,7 +41,7 @@ Setup a four node Puppet Environment:
 	  
 ##TODO
 
-* fix the puppetmaster -> puppetdb communication bug with Puppet3 ()
+* fix the puppetmaster -> puppetdb communication bug with Puppet3 [Bug] (https://github.com/SimonHoenscheid/vagrant-puppet-development-environment)
 * get rid of puppet deprecation warnings for the Puppet3 agents (roll out new config)
 * setup puppetexplorer node
 * setup foreman node (will not work with Puppet 4 atm)
