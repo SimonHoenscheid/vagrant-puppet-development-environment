@@ -43,6 +43,7 @@ Setup a four node Puppet Environment:
 
 * fix the puppetmaster -> puppetdb communication bug with Puppet3 [Bug] (https://github.com/SimonHoenscheid/vagrant-puppet-development-environment/issues/1)
 * get rid of puppet deprecation warnings for the Puppet3 agents (roll out new config)
+* add CENT OS 7 support
 * setup puppetexplorer node
 * setup foreman node (will not work with Puppet 4 atm)
 * cleanup code
