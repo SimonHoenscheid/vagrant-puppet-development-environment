@@ -92,4 +92,5 @@ Setup a four node Puppet Environment:
 * setup puppetexplorer node
 * setup foreman node (will not work with Puppet 4 atm)
 * cleanup code
+* do more things in puppetcode, less in scripts
 
