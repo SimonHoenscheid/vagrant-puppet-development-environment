@@ -37,8 +37,53 @@ Setup a four node Puppet Environment:
 	  vagrant directory. You could also move the existing code to an new git
 	  repo, remove the symlinks in the environment dir and modify the vagrant
 	  file to mount your new git.
-	  
-	  
+##Transfer existing Code to new Git and mounting
+**transfer the existing code to new git**
+
+	cd ~/
+	mkdir new-puppet-dev
+	cd new-puppet-dev
+	git init 
+	cp -r /path/to/vagrant/git/hieradata .
+	cp -r /path/to/vagrant/git/manifests .
+	cp -r /path/to/vagrant/git/modules .
+
+**delete existing symlinks in vagrant box**
+
+	vagrant ssh puppet
+	sudo rm -rf /path/to/puppet/environment/directory/*
+	logout
+**edit Vagrantfile add the following line to the puppet host**
+
+	
+	puppet.vm.synced_folder "/path/to/local/git", "/path/to/puppet/environment/directory"
+
+**reload vagrant**
+
+	vagrant reload
+	
+##Basic Usage
+**start an environment**
+
+	./yes_create_a_puppet_development_environment.sh
+**stop an environment**
+
+	vagrant halt
+**destroy an environment**
+	
+	vagrant destroy -f
+**connect to a vagrant box**
+
+	vagrant ssh *boxname*
+
+**connect a new box to the puppetmaster**
+
+1. add new hostname and ip to hostlist on top of vagrant file
+2. copy the block of the puppetclient01 node and edit the ip and name
+3. safe the vagrant file
+4. execute vagrant up
+5. the box ist connected, happy development
+
 ##TODO
 
 * fix the puppetmaster -> puppetdb communication bug with Puppet3 [Bug] (https://github.com/SimonHoenscheid/vagrant-puppet-development-environment/issues/1)
