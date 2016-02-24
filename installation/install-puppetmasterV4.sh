@@ -1,11 +1,13 @@
 #!/bin/bash
 
-sudo /opt/puppetlabs/bin/puppetserver gem install deep_merge
-
+sudo su puppet -s /bin/bash -c '/opt/puppetlabs/bin/puppetserver gem install deep_merge'
+sudo /opt/puppetlabs/puppet/bin/gem install deep_merge
 if [ -f /vagrant/puppetmaster.gpg.sec ]; then
 	#install hiera-eyaml-gpg and dependencies
-	sudo /opt/puppetlabs/bin/puppetserver gem install ruby_gpg
-	sudo /opt/puppetlabs/bin/puppetserver gem install hiera-eyaml-gpg
+  sudo su puppet -s /bin/bash -c '/opt/puppetlabs/bin/puppetserver gem install ruby_gpg highline trollop'
+  sudo su puppet -s /bin/bash -c '/opt/puppetlabs/bin/puppetserver gem install hiera-eyaml hiera-eyaml-gpg'
+	sudo /opt/puppetlabs/puppet/bin/gem install ruby_gpg highline trollop
+	sudo /opt/puppetlabs/puppet/bin/gem install hiera-eyaml hiera-eyaml-gpg
 	#import private key for puppetmaster without password
 	sudo su puppet -s /bin/bash -c '/usr/bin/gpg --import /vagrant/puppetmaster.gpg.sec'
 fi
