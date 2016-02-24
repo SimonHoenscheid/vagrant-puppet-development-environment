@@ -5,3 +5,4 @@ site_module::profiles::puppetdb_listen_address: '192.168.0.6'
 site_module::profiles::puppetdb::puppetdb_java_args: 
   -Xmx: '768m'
   -Xms: '768m'
+puppetdb::globals::version: 2.3.4-1puppetlabs1
