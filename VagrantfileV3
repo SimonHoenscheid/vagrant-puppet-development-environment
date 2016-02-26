@@ -23,6 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		puppet.vm.provision :shell, :path => "installation/prepare-install.sh"
 		puppet.vm.provision :shell, :path => "installation/prepare-puppet3.sh"
 		puppet.vm.provision :shell, :path => "installation/install-puppetmasterV3.sh"
+    puppet.vm.synced_folder "/Volumes/Daten/coderepositories/vagrant-puppet-development-environment/puppet", "/etc/puppet/environments/production"
 		puppet.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1

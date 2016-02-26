@@ -22,6 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		puppet.vm.network "private_network", ip: "192.168.0.5"
 		puppet.vm.provision :shell, :path => "installation/prepare-install.sh"
 		puppet.vm.provision :shell, :path => "installation/install-puppetmasterV4.sh"
+    puppet.vm.synced_folder "/Volumes/Daten/coderepositories/vagrant-puppet-development-environment/puppet", "/etc/puppetlabs/code/environments/production"
 		puppet.vm.provider "virtualbox" do |v|
 			v.memory = 3072 
 			v.cpus = 1

@@ -1,0 +1,3 @@
+---
+site_module::base::server_role: 'single_puppetmaster'
+site_module::profiles::single_puppetmaster::puppetdb_address: 'puppetdb.local'
