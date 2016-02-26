@@ -1,5 +1,0 @@
----
-bar: foo
-site_module::base::server_role: 'single_puppetmaster'
-site_module::profiles::single_puppetmaster::puppetdb_address: 'puppetdb.local'
-puppetdb::globals::version: 2.3.4-1puppetlabs1

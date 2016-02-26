@@ -1,8 +1,0 @@
----
-:backends:
-  - yaml
-:yaml:
-  :datadir: /vagrant/hieradata/
-:hierarchy:
-  - "nodes/%{::fqdn}"
-  - common
