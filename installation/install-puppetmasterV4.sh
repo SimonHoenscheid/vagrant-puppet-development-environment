@@ -9,7 +9,9 @@ if [ -f /vagrant/puppetmaster.gpg.sec ]; then
 	sudo /opt/puppetlabs/puppet/bin/gem install ruby_gpg highline trollop
 	sudo /opt/puppetlabs/puppet/bin/gem install hiera-eyaml hiera-eyaml-gpg
 	#import private key for puppetmaster without password
-	sudo su puppet -s /bin/bash -c '/usr/bin/gpg --import /vagrant/puppetmaster.gpg.sec'
+	sudo cp /vagrant/puppetmaster.gpg.sec /opt/puppetlabs/server/data/puppetserver/key
+	sudo chown puppet:puppet /opt/puppetlabs/server/data/puppetserver/key
+	sudo su puppet -s /bin/bash -c '/usr/bin/gpg --import /opt/puppetlabs/server/data/puppetserver/key'
 fi
 sudo service puppetserver stop
 sudo rm -rf /etc/puppetlabs/puppet/ssl/*
