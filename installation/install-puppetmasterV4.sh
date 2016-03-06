@@ -13,6 +13,5 @@ if [ -f /vagrant/puppetmaster.gpg.sec ]; then
 fi
 sudo service puppetserver stop
 sudo rm -rf /etc/puppetlabs/puppet/ssl/*
-sudo rm -rf /etc/puppetlabs/code/environments/production/*
 sudo service puppetserver start
 sudo /opt/puppetlabs/bin/puppet apply --hiera_config=/vagrant/puppet/hieradata/hiera.yaml --modulepath=/vagrant/puppet/modules -e'include site_module::roles::single_puppetmaster'
