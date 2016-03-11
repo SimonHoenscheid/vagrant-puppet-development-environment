@@ -14,6 +14,7 @@
 * vagrant-hosts
 
 		vagrant plugin install vagrant-hosts
+		
 * vagrant
 * virtual box
 * 3-5 GB of RAM
@@ -29,13 +30,14 @@ Setup a four node Puppet Environment:
 
 	* clone the repository
 	* if you want/need hiera-eyaml-gpg support, place a private puppetmaster gpg 
-	  key without password inside the vagrant directory, name it
+	  key without passphrase inside the vagrant directory, name it
 	  puppetmaster.gpg.sec, it will be importet, dependencies will be installed
+	* edit Vagrantfile{V3,V4} in line 25/26, set this to the pwd
 	* run yes_create_a_puppet_development_environment.sh
 	* decide which version you need, the environment will be build
 	* you can just start coding within the puppet directories located in the
 	  vagrant directory. You could also move the existing code to an new git
-	  repo, remove the symlinks in the environment dir and modify the vagrant
+	  repo and modify the vagrant
 	  file to mount your new git.
 ##Transfer existing Code to new Git and mounting
 **transfer the existing code to new git**
@@ -44,16 +46,11 @@ Setup a four node Puppet Environment:
 	mkdir new-puppet-dev
 	cd new-puppet-dev
 	git init 
-	cp -r /path/to/vagrant/git/hieradata .
-	cp -r /path/to/vagrant/git/manifests .
-	cp -r /path/to/vagrant/git/modules .
+	cp -r /path/to/vagrant/puppet/hieradata .
+	cp -r /path/to/vagrant/puppet/manifests .
+	cp -r /path/to/vagrant/puppet/modules .
 
-**delete existing symlinks in vagrant box**
-
-	vagrant ssh puppet
-	sudo rm -rf /path/to/puppet/environment/directory/*
-	logout
-**edit Vagrantfile add the following line to the puppet host**
+**edit Vagrantfile edit the following line to the puppet host (Line 25 [V4]/line 26 [V3])**
 
 	
 	puppet.vm.synced_folder "/path/to/local/git", "/path/to/puppet/environment/directory"
