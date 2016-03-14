@@ -1,12 +1,10 @@
 #puppetdb profile
 class site_module::profiles::puppetdb (
-  $puppetdb_postgres_address = hiera('site_module::profiles::puppetdb::puppetdb_postgres_address', undef),
-  $puppetdb_listen_address   = hiera('site_module::profiles::puppetdb_listen_address', undef),
-  $puppetdb_java_args        = hiera('site_module::profiles::puppetdb::puppetdb_java_args', {}),
+  $puppetdb_postgres_address = $site_module::params::puppetdb_postgres_address,
+  $puppetdb_listen_address   = $site_module::params::puppetdb_listen_address,
+  $puppetdb_java_args        = $site_module::params::puppetdb_java_args,
+  $major_puppetversion       = $site_module::params::major_puppetversion
   ){
-  include site_module::params
-
-  $major_puppetversion = $site_module::params::major_puppetversion
 
   if $major_puppetversion == '3' {
     class { 'puppetdb::globals':
