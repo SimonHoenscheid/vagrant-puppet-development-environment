@@ -1,3 +1,3 @@
-node default {
-  include site_module
-}
+node default {}
+
+include site_module
