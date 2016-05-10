@@ -7,7 +7,7 @@
 ##What
 
 * Puppet4 Support
-* Puppet3 Support (not yet, see Issues)
+* Puppet3 Support
 
 ##Requirements
 
@@ -19,12 +19,15 @@
 * virtual box
 * 3-5 GB of RAM
 
-Setup a four node Puppet Environment:
+Setup a Puppet Environment:
 	
 	* puppet.local (puppetmaster/puppetserver)
 	* puppetdb.local (puppetdb)
 	* postgres-puppetdb.local (postgresql database)
-	* puppetclient-01.local (puppet agent)
+	
+Add up to five clients. While the master nodes are debian 8, the clients can be debian{7,8}, centos(6,7), oracle linux {6,7}, ubuntu{12 LTS, 14 LTS, 16 LTS} 
+
+	* puppetclient-{01-05}.local (puppet agent)
 
 ##Get Startet
 
@@ -84,7 +87,7 @@ Setup a four node Puppet Environment:
 ##TODO
 
 * get rid of puppet deprecation warnings for the Puppet3 agents (roll out new config)
-* add CENT OS 7 support
+* add multi OS Support
 * setup puppetexplorer node
 * setup foreman node (will not work with Puppet 4 atm)
 * cleanup code
