@@ -1,15 +1,14 @@
 #single puppetmaster profile
 class site_module::profiles::single_puppetmaster (
-  $puppetdb_address    = $site_module::params::puppetdb_address,
-  $use_hiera_eyaml_gpg = $site_module::params::use_hiera_eyaml_gpg,
-  $puppet_config_path  = $site_module::params::puppet_config_path,
-  $major_puppetversion = $site_module::params::major_puppetversion,
-  $hiera_config        = $site_module::params::hiera_config,
-  $hiera_templatefile  = $site_module::params::hiera_templatefile,
-  $terminus_package    = $site_module::params::terminus_package,
+  $hiera_config        = $site_module::hiera_config,
+  $hiera_templatefile  = $site_module::hiera_templatefile,
+  $major_puppetversion = $site_module::major_puppetversion,
+  $puppet_config_path  = $site_module::puppet_config_path,
+  $puppetdb_address    = $site_module::puppetdb_address,
+  $terminus_package    = $site_module::terminus_package,
+  $use_hiera_eyaml_gpg = $site_module::use_hiera_eyaml_gpg,
 ){
-
-  class{ 'puppetdb::master::config':
+  class{ '::puppetdb::master::config':
     puppetdb_server             => $puppetdb_address,
     terminus_package            => $terminus_package,
     puppetdb_soft_write_failure => true,

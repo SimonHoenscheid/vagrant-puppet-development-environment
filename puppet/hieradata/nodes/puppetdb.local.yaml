@@ -1,7 +1,7 @@
 ---
 site_module::base::server_role: 'puppetdb'
-site_module::profiles::puppetdb::puppetdb_postgres_address: '192.168.0.7'
-site_module::profiles::puppetdb_listen_address: '192.168.0.6'
+site_module::profiles::puppetdb::puppetdb_postgres_address: '192.168.33.7'
+site_module::profiles::puppetdb_listen_address: '192.168.33.6'
 site_module::profiles::puppetdb::puppetdb_java_args: 
   -Xmx: '768m'
   -Xms: '768m'
