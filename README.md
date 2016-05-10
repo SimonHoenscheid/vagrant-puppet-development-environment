@@ -93,6 +93,22 @@ Add up to five clients. While the master nodes are debian 8, the clients can be 
 * cleanup code
 * do more things in puppetcode, less in scripts
 
+## OS IMAGES PLANNED
+
+* debian/jessie64
+* debian/wheezy64
+* puppetlabs/centos-6.6-64-nocm
+* centos-71-x64-vbox
+* elastic/oraclelinux-6-x86_64
+* elastic/oraclelinux-7-x86_64
+* ubuntu/precise64
+* ubuntu/trusty64
+* ubuntu/xenial64
+
+## OS IMAGES AVILABLE
+
+* non generic debian 8
+
 ##FIXED
 * fix the puppetmaster -> puppetdb communication bug with Puppet3 [Bug] (https://github.com/SimonHoenscheid/vagrant-puppet-development-environment/issues/1)
 
