@@ -20,12 +20,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # puppetclient01 node
   config.vm.define "puppetclient01" do |pc01|
-		pc01.vm.box = "SimonHoenscheid/debian8-puppet4"
-		pc01.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet4"
+		pc01.vm.box = "debian/contrib-jessie64"
+		pc01.vm.box_url = "https://atlas.hashicorp.com/debian/contrib-jessie64"
 		pc01.vm.hostname = "puppetclient-01.local"
 		pc01.vm.network "private_network", ip: "192.168.33.10"
-		pc01.vm.provision :shell, :path => "../../installation/prepare-install.sh"
-		pc01.vm.provision :shell, :path => "../../installation/install-puppetclientV4.sh"
+		pc01.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc01.vm.provision :shell, :path => "../../installation/install-puppet4-deb.sh"
 		pc01.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
@@ -34,12 +34,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # puppetclient02 node
   config.vm.define "puppetclient02" do |pc02|
-		pc02.vm.box = "SimonHoenscheid/debian8-puppet4"
-		pc02.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet4"
+		pc02.vm.box = "debian/contrib-jessie64"
+		pc02.vm.box_url = "https://atlas.hashicorp.com/debian/contrib-jessie64"
 		pc02.vm.hostname = "puppetclient-02.local"
 		pc02.vm.network "private_network", ip: "192.168.33.11"
-		pc02.vm.provision :shell, :path => "../../installation/prepare-install.sh"
-		pc02.vm.provision :shell, :path => "../../installation/install-puppetclientV4.sh"
+		pc02.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc02.vm.provision :shell, :path => "../../installation/install-puppet4-deb.sh"
 		pc02.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
@@ -48,12 +48,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
 	# puppetclient03 node
   config.vm.define "puppetclient03" do |pc03|
-		pc03.vm.box = "SimonHoenscheid/debian8-puppet4"
-		pc03.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet4"
+		pc03.vm.box = "debian/contrib-jessie64"
+		pc03.vm.box_url = "https://atlas.hashicorp.com/debian/contrib-jessie64"
 		pc03.vm.hostname = "puppetclient-03.local"
 		pc03.vm.network "private_network", ip: "192.168.33.12"
-		pc03.vm.provision :shell, :path => "../../installation/prepare-install.sh"
-		pc03.vm.provision :shell, :path => "../../installation/install-puppetclientV4.sh"
+		pc03.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc03.vm.provision :shell, :path => "../../installation/install-puppet4-deb.sh"
 		pc03.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
@@ -62,12 +62,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
 	# puppetclient04 node
   config.vm.define "puppetclient04" do |pc04|
-		pc04.vm.box = "SimonHoenscheid/debian8-puppet4"
-		pc04.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet4"
+		pc04.vm.box = "debian/contrib-jessie64"
+		pc04.vm.box_url = "https://atlas.hashicorp.com/debian/contrib-jessie64"
 		pc04.vm.hostname = "puppetclient-04.local"
 		pc04.vm.network "private_network", ip: "192.168.33.13"
-		pc04.vm.provision :shell, :path => "../../installation/prepare-install.sh"
-		pc04.vm.provision :shell, :path => "../../installation/install-puppetclientV4.sh"
+		pc04.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc04.vm.provision :shell, :path => "../../installation/install-puppet4-deb.sh"
 		pc04.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
@@ -76,12 +76,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
 	# puppetclient05 node
   config.vm.define "puppetclient05" do |pc05|
-		pc05.vm.box = "SimonHoenscheid/debian8-puppet4"
-		pc05.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet4"
+		pc05.vm.box = "debian/contrib-jessie64"
+		pc05.vm.box_url = "https://atlas.hashicorp.com/debian/contrib-jessie64"
 		pc05.vm.hostname = "puppetclient-05.local"
 		pc05.vm.network "private_network", ip: "192.168.33.15"
-		pc05.vm.provision :shell, :path => "../../installation/prepare-install.sh"
-		pc05.vm.provision :shell, :path => "../../installation/install-puppetclientV4.sh"
+		pc05.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc05.vm.provision :shell, :path => "../../installation/install-puppet4-deb.sh"
 		pc05.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
