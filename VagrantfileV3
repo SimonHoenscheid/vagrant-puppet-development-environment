@@ -20,29 +20,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 	# puppet master node
   config.vm.define "puppet" do |puppet|
-		puppet.vm.box = "SimonHoenscheid/debian8-puppet3-master"
-		puppet.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet3-master"
+		puppet.vm.box = "debian/contrib-jessie64"
+		puppet.vm.box_url = "https://atlas.hashicorp.com/debian/contrib-jessie64"
 		puppet.vm.hostname = "puppet.local"
 		puppet.vm.network "private_network", ip: "192.168.33.5"
-		puppet.vm.provision :shell, :path => "installation/prepare-install.sh"
-		puppet.vm.provision :shell, :path => "installation/prepare-puppet3.sh"
-		puppet.vm.provision :shell, :path => "installation/install-puppetmasterV3.sh"
-    puppet.vm.synced_folder "puppet/", "/etc/puppet/environments/production"
+		puppet.vm.provision :shell, :path => "installation/prepare-install-deb.sh.sh"
+		puppet.vm.provision :shell, :path => "installation/install-puppetmaster3-deb.sh"
+		puppet.vm.synced_folder "puppet/", "/etc/puppet/environments/production", create: true
 		puppet.vm.provider "virtualbox" do |v|
-			v.memory = 1024 
+			v.memory = 1024
 			v.cpus = 1
 		end
 	end
 
   # puppetdb postgres database node
   config.vm.define "postgres-puppetdb" do |postgres_puppetdb|
-		postgres_puppetdb.vm.box = "SimonHoenscheid/debian8-puppet3"
-		postgres_puppetdb.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet3"
+		postgres_puppetdb.vm.box = "debian/contrib-jessie64"
+		postgres_puppetdb.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/contrib-jessie64"
 		postgres_puppetdb.vm.hostname = "postgres-puppetdb.local"
 		postgres_puppetdb.vm.network "private_network", ip: "192.168.33.7"
-		postgres_puppetdb.vm.provision :shell, :path => "installation/prepare-install.sh"
-		postgres_puppetdb.vm.provision :shell, :path => "installation/prepare-puppet3.sh"
-		postgres_puppetdb.vm.provision :shell, :path => "installation/install-puppetdb-postgresV3.sh"
+		postgres_puppetdb.vm.provision :shell, :path => "installation/prepare-install-deb.sh"
+		postgres_puppetdb.vm.provision :shell, :path => "installation/install-puppet3-deb.sh"
 		postgres_puppetdb.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
@@ -51,17 +49,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # puppetdb api node
   config.vm.define "puppetdb" do |puppetdb|
-		puppetdb.vm.box = "SimonHoenscheid/debian8-puppet3"
-		puppetdb.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/debian8-puppet3"
+		puppetdb.vm.box = "debian/contrib-jessie64"
+		puppetdb.vm.box_url = "https://atlas.hashicorp.com/SimonHoenscheid/contrib-jessie64"
 		puppetdb.vm.hostname = "puppetdb.local"
 		puppetdb.vm.network "private_network", ip: "192.168.33.6"
-		puppetdb.vm.provision :shell, :path => "installation/prepare-install.sh"
-		puppetdb.vm.provision :shell, :path => "installation/prepare-puppet3.sh"
-		puppetdb.vm.provision :shell, :path => "installation/install-puppetdbV3.sh"
+		puppetdb.vm.provision :shell, :path => "installation/prepare-install-deb.sh"
+		puppetdb.vm.provision :shell, :path => "installation/install-puppet3-deb.sh"
 		puppetdb.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
 		end
 	end
-  
 end
