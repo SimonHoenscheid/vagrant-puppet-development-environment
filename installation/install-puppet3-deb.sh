@@ -5,11 +5,13 @@ CODENAME=`lsb_release -cs`
 
 wget http://apt.puppetlabs.com/puppetlabs-release-"$CODENAME".deb
 dpkg -i puppetlabs-release-"$CODENAME".deb
+rm -f puppetlabs-release-"$CODENAME".deb
+cp /etc/apt/sources.list.d/puppetlabs.list /etc/apt/sources.list.d/puppetlabs2.list
+sed -i s/jessie/stable/g /etc/apt/sources.list.d/puppetlabs2.list
 apt-get update
 
 # Install puppet/facter
 apt-get install -y puppet facter 
-rm -f puppetlabs-release-"$CODENAME".deb
 
 # Disable Puppet agent on systemd
 # PuppetLabs has the service disabled per default

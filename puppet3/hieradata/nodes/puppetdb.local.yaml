@@ -1,6 +1,5 @@
 ---
 site_module::base::server_role: 'puppetdb'
-puppetdb::globals::version: '2.3.4-1puppetlabs1'
 site_module::profiles::puppetdb::puppetdb_postgres_address: '192.168.33.7'
 site_module::profiles::puppetdb_listen_address: '192.168.33.6'
 site_module::profiles::puppetdb::puppetdb_java_args: 
