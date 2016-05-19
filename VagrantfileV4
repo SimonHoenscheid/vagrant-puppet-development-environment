@@ -24,9 +24,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		puppet.vm.box_url = "https://atlas.hashicorp.com/debian/contrib-jessie64"
 		puppet.vm.hostname = "puppet.local"
 		puppet.vm.network "private_network", ip: "192.168.33.5"
-		puppet.vm.provision :shell, :path => "installation/prepare-install-deb.sh.sh"
+		puppet.vm.provision :shell, :path => "installation/prepare-install-deb.sh"
 		puppet.vm.provision :shell, :path => "installation/install-puppetmaster4-deb.sh"
-    puppet.vm.synced_folder "puppet/", "/etc/puppetlabs/code/environments/production", create: true
+    puppet.vm.synced_folder "puppet4/", "/etc/puppetlabs/code/environments/production", create: true
 		puppet.vm.provider "virtualbox" do |v|
 			v.memory = 3072 
 			v.cpus = 1
