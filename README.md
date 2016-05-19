@@ -9,6 +9,22 @@
 * Puppet4 Support
 * Puppet3 Support
 
+## MASTERS
+* Debian 8 based
+
+
+## OS IMAGES AVAILABLE FOR CLIENTS
+
+* Debian 7
+* Debian 8
+* Centos 6
+* Centos 7
+* Oracle Enterprise linux 6
+* Oracle Enterprise linux 7
+* Ubuntu 12.04 LTS
+* Ubuntu 14.04 LTS
+* Ubuntu 16.04 LTS
+
 ##Requirements
 
 * vagrant-hosts
@@ -25,7 +41,7 @@ Setup a Puppet Environment:
 	* puppetdb.local (puppetdb)
 	* postgres-puppetdb.local (postgresql database)
 	
-Add up to five clients. While the master nodes are debian 8, the clients can be debian{7,8}, centos(6,7), oracle linux {6,7}, ubuntu{12 LTS, 14 LTS, 16 LTS} 
+Add up to five clients.
 
 	* puppetclient-{01-05}.local (puppet agent)
 
@@ -37,7 +53,7 @@ Add up to five clients. While the master nodes are debian 8, the clients can be 
 	  puppetmaster.gpg.sec, it will be importet, dependencies will be installed
 	* edit Vagrantfile{V3,V4} in line 25/26, set this to the pwd
 	* run yes_create_a_puppet_development_environment.sh
-	* decide which version you need, the environment will be build
+	* decide which version and clients you need, the environment will be build
 	* you can just start coding within the puppet directories located in the
 	  vagrant directory. You could also move the existing code to an new git
 	  repo and modify the vagrant
@@ -71,43 +87,28 @@ Add up to five clients. While the master nodes are debian 8, the clients can be 
 	vagrant halt
 **destroy an environment**
 	
-	vagrant destroy -f
+	./cleanup_all_vagrantboxes.sh
 **connect to a vagrant box**
 
 	vagrant ssh *boxname*
 
-**connect a new box to the puppetmaster**
+**connect different OS Clients to puppetmaster**
 
-1. add new hostname and ip to hostlist on top of vagrant file
-2. copy the block of the puppetclient01 node and edit the ip and name
-3. safe the vagrant file
-4. execute vagrant up
-5. the box ist connected, happy development
+1. go to clients directory
+2. choose the OS with the matching puppet version (p3 =Puppet3, p4=Puppet4)
+3. boxes puppetclient0{1-5} are prepared for each OS.
+4. execute vagrant global-status
+5. start up the next box in a row:
+6. vagrant up puppetclient0n
 
 ##TODO
 
 * get rid of puppet deprecation warnings for the Puppet3 agents (roll out new config)
-* add multi OS Support
 * setup puppetexplorer node
 * setup foreman node (will not work with Puppet 4 atm)
 * cleanup code
 * do more things in puppetcode, less in scripts
 
-## OS IMAGES PLANNED
-
-* debian/jessie64
-* debian/wheezy64
-* puppetlabs/centos-6.6-64-nocm
-* centos-71-x64-vbox
-* elastic/oraclelinux-6-x86_64
-* elastic/oraclelinux-7-x86_64
-* ubuntu/precise64
-* ubuntu/trusty64
-* ubuntu/xenial64
-
-## OS IMAGES AVILABLE
-
-* non generic debian 8
 
 ##FIXED
 * fix the puppetmaster -> puppetdb communication bug with Puppet3 [Bug] (https://github.com/SimonHoenscheid/vagrant-puppet-development-environment/issues/1)
