@@ -14,7 +14,7 @@ echo 'Please Enter the Puppetversion you want to use. Type 4 for Puppet4 and 5 f
 #add input validation
 read PUPPETVERSION
 
-echo 'Please Enter the OS you want to use on the clientside. Type'
+echo 'Please Enter the OS you want to use on the clientside. Type' 
 echo 'c6 for CentOS 6'
 echo 'c7 for CentOS 7'
 echo 'd8 for Debian 8'
