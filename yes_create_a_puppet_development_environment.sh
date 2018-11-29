@@ -10,7 +10,7 @@ u12='Ubuntu 1204 LTS'
 u14='Ubuntu 1404 LTS'
 u16='Ubuntu 1604 LTS'
 
-echo 'Please Enter the Puppetversion you want to use. Type 4 for Puppet4 and 3 for Puppet3'
+echo 'Please Enter the Puppetversion you want to use. Type 5 for Puppet5'
 #add input validation
 read PUPPETVERSION
 
@@ -27,7 +27,7 @@ echo 'u16 for Ubuntu 1604 LTS'
 #add input validation
 read OS
 
-echo 'Please Enter the number of clients you want to create. possible 1-5'
+echo 'Please Enter the number of clients you want to create. possible 1-10'
 #add input validation
 read NUMBER_OF_PUPPETCLIENTS
 
@@ -48,14 +48,9 @@ do
    cd ../..
 done
 
-if [ "$PUPPETVERSION" == "3" ]; then
-  echo "I will build a Puppet development environment for Puppet3 with $NUMBER_OF_PUPPETCLIENTS clients on ${!OS}"
-	cp VagrantfileV3 Vagrantfile
-fi
-
-if [ "$PUPPETVERSION" == "4" ]; then
-  echo "I will build a Puppet development environment for Puppet4  with $NUMBER_OF_PUPPETCLIENTS clients on ${!OS}"
-	cp VagrantfileV4 Vagrantfile
+if [ "$PUPPETVERSION" == "5" ]; then
+  echo "I will build a Puppet development environment for Puppet5  with $NUMBER_OF_PUPPETCLIENTS clients on ${!OS}"
+	cp VagrantfileV5 Vagrantfile
 fi
 
 echo "doing first vagrant run"
@@ -66,14 +61,7 @@ echo "doing third vagrant run"
 vagrant up
 echo "puppet never runs completely trouble less when setting up a multi node puppetdb setup"
 
-if [ "$PUPPETVERSION" == "3" ]; then
-vagrant ssh puppet -c 'sudo puppet agent -t --server puppet.local'
-vagrant ssh puppet -c 'sudo puppet agent -t --server puppet.local'
-vagrant ssh puppetdb -c 'sudo puppet agent -t --server puppet.local'
-vagrant ssh postgres-puppetdb -c 'sudo puppet agent -t --server puppet.local'
-fi
-
-if [ "$PUPPETVERSION" == "4" ]; then
+if [ "$PUPPETVERSION" == "5" ]; then
 vagrant ssh puppet -c 'sudo /opt/puppetlabs/bin/puppet agent -t --server puppet.local'
 vagrant ssh puppet -c 'sudo /opt/puppetlabs/bin/puppet agent -t --server puppet.local'
 vagrant ssh puppetdb -c 'sudo /opt/puppetlabs/bin/puppet agent -t --server puppet.local'
