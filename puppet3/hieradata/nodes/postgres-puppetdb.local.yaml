@@ -1,3 +1,0 @@
----
-site_module::base::server_role: 'postgres_puppetdb'
-site_module::profiles::puppetdb_postgres::postgres_listen_address: '*'
