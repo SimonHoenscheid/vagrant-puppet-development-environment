@@ -1,29 +1,26 @@
 #!/bin/bash
 
-c6='CentOS 6'
 c7='CentOS 7'
-d7='Debian 7'
 d8='Debian 8'
-ora6='Oracle Linux 6'
-ora7='Oracle Linux 7'
+d9='Debian 9'
 u12='Ubuntu 1204 LTS'
 u14='Ubuntu 1404 LTS'
 u16='Ubuntu 1604 LTS'
+u18='Ubuntu 1804 LTS'
 
 echo 'Please Enter the Puppetversion you want to use. Type 5 for Puppet5'
 #add input validation
 read PUPPETVERSION
 
-echo 'Please Enter the OS you want to use on the clientside. Type' 
-echo 'c6 for CentOS 6'
+echo 'Please Enter the OS you want to use on the clientside. Type'
 echo 'c7 for CentOS 7'
 echo 'd7 for Debian 7'
 echo 'd8 for Debian 8'
-echo 'ora6 for Oracle Linux 6'
-echo 'ora7 for Oracle Linux 7'
+echo 'd9 for Debian 9'
 echo 'u12 for Ubuntu 1204 LTS'
 echo 'u14 for Ubuntu 1404 LTS'
 echo 'u16 for Ubuntu 1604 LTS'
+echo 'u16 for Ubuntu 1804 LTS'
 #add input validation
 read OS
 

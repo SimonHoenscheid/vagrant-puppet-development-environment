@@ -1,0 +1,165 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	# allow hostname resolution
+	config.vm.provision :hosts do |prov|
+		prov.add_host '192.168.33.5', ['puppet.local']
+		prov.add_host '192.168.33.6', ['puppetdb.local']
+		prov.add_host '192.168.33.7', ['postgres-puppetdb.local']
+		prov.add_host '192.168.33.8', ['puppetexplorer.local']
+		prov.add_host '192.168.33.9', ['foreman.local']
+		prov.add_host '192.168.33.10', ['puppetclient-01.local']
+		prov.add_host '192.168.33.11', ['puppetclient-02.local']
+		prov.add_host '192.168.33.12', ['puppetclient-03.local']
+		prov.add_host '192.168.33.13', ['puppetclient-04.local']
+		prov.add_host '192.168.33.14', ['puppetclient-05.local']
+		prov.add_host '192.168.33.15', ['puppetclient-06.local']
+		prov.add_host '192.168.33.16', ['puppetclient-07.local']
+		prov.add_host '192.168.33.17', ['puppetclient-08.local']
+		prov.add_host '192.168.33.18', ['puppetclient-09.local']
+		prov.add_host '192.168.33.19', ['puppetclient-10.local']
+	end
+
+	# puppetclient01 node
+	config.vm.define "puppetclient01" do |pc01|
+		pc01.vm.box = "ubuntu/xenial64"
+		pc01.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc01.vm.hostname = "puppetclient-01.local"
+		pc01.vm.network "private_network", ip: "192.168.33.10"
+		pc01.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc01.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc01.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient02 node
+	config.vm.define "puppetclient02" do |pc02|
+		pc02.vm.box = "ubuntu/xenial64"
+		pc02.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc02.vm.hostname = "puppetclient-02.local"
+		pc02.vm.network "private_network", ip: "192.168.33.11"
+		pc02.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc02.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc02.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient03 node
+	config.vm.define "puppetclient03" do |pc03|
+		pc03.vm.box = "ubuntu/xenial64"
+		pc03.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc03.vm.hostname = "puppetclient-03.local"
+		pc03.vm.network "private_network", ip: "192.168.33.12"
+		pc03.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc03.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc03.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient04 node
+	config.vm.define "puppetclient04" do |pc04|
+		pc04.vm.box = "ubuntu/xenial64"
+		pc04.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc04.vm.hostname = "puppetclient-04.local"
+		pc04.vm.network "private_network", ip: "192.168.33.13"
+		pc04.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc04.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc04.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient05 node
+	config.vm.define "puppetclient05" do |pc05|
+		pc05.vm.box = "ubuntu/xenial64"
+		pc05.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc05.vm.hostname = "puppetclient-05.local"
+		pc05.vm.network "private_network", ip: "192.168.33.14"
+		pc05.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc05.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc05.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient06 node
+	config.vm.define "puppetclient06" do |pc06|
+		pc06.vm.box = "ubuntu/xenial64"
+		pc06.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc06.vm.hostname = "puppetclient-06.local"
+		pc06.vm.network "private_network", ip: "192.168.33.15"
+		pc06.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc06.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc06.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient07 node
+	config.vm.define "puppetclient07" do |pc07|
+		pc07.vm.box = "ubuntu/xenial64"
+		pc07.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc07.vm.hostname = "puppetclient-07.local"
+		pc07.vm.network "private_network", ip: "192.168.33.16"
+		pc07.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc07.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc07.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient08 node
+	config.vm.define "puppetclient08" do |pc08|
+		pc08.vm.box = "ubuntu/xenial64"
+		pc08.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc08.vm.hostname = "puppetclient-08.local"
+		pc08.vm.network "private_network", ip: "192.168.33.17"
+		pc08.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc08.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc08.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient09 node
+	config.vm.define "puppetclient09" do |pc09|
+		pc09.vm.box = "ubuntu/xenial64"
+		pc09.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc09.vm.hostname = "puppetclient-09.local"
+		pc09.vm.network "private_network", ip: "192.168.33.18"
+		pc09.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc09.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc09.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+
+	# puppetclient10 node
+	config.vm.define "puppetclient10" do |pc10|
+		pc10.vm.box = "ubuntu/xenial64"
+		pc10.vm.box_url = "https://app.vagrantup.com/ubuntu/xenial64"
+		pc10.vm.hostname = "puppetclient-10.local"
+		pc10.vm.network "private_network", ip: "192.168.33.19"
+		pc10.vm.provision :shell, :path => "../../installation/prepare-install-deb.sh"
+		pc10.vm.provision :shell, :path => "../../installation/install-puppet5-deb.sh"
+		pc10.vm.provider "virtualbox" do |v|
+			v.memory = 1024
+			v.cpus = 1
+		end
+	end
+end
