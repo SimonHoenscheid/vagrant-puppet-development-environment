@@ -11,12 +11,12 @@
 
 :yaml:
   :extension: 'yaml'
-  :datadir: /etc/puppetlabs/code/environments/%{::environment}/hieradata
+  :datadir: /etc/puppetlabs/code/environments/%{::environment}/data
 
 <% if @use_hiera_eyaml_gpg == true -%>
 :eyaml:
   :extension: 'yaml'
-  :datadir: /etc/puppetlabs/code/environments/%{::environment}/hieradata
+  :datadir: /etc/puppetlabs/code/environments/%{::environment}/data
   :encrypt_method: gpg
   :gpg_gnupghome: '/opt/puppetlabs/server/data/puppetserver/.gnupg'
 <% end -%>

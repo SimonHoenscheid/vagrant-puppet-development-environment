@@ -1,0 +1,26 @@
+---
+version: 5
+defaults:
+  datadir: "/etc/puppetlabs/code/environments/%{::environment}/data"
+  data_hash: yaml_data
+# host/fqdn - nodespecific content
+# stage/role - specific data that is different from the role for the stage where stage is the puppet enivironment
+# roles/role - role specific default
+# common - defaults used everywhere, use only where necessary
+hierarchy:
+  - name: "Encrypted data"
+    lookup_key: eyaml_lookup_key
+    options:
+      encrypt_method: gpg
+      gpg_gnupghome: '/opt/puppetlabs/server/data/puppetserver/.gnupg'
+    paths:
+      - "nodes/%{facts.fqdn}.yaml"
+      - "stages/%{facts.puppet_server_stage}/%{facts.puppet_server_role}.yaml"
+      - "roles/%{facts.puppet_server_role}.yaml"
+      - "common.yaml"
+  - name: "Unencrypted data"
+    paths:
+      - "nodes/%{facts.fqdn}.yaml"
+      - "stages/%{facts.puppet_server_stage}/%{facts.puppet_server_role}.yaml"
+      - "roles/%{facts.puppet_server_role}.yaml"
+      - "common.yaml"

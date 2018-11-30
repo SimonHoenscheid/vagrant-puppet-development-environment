@@ -12,12 +12,12 @@
   - common
 
 :yaml:
-  :datadir: /etc/puppet/environments/%{::environment}/hieradata
+  :datadir: /etc/puppet/environments/%{::environment}/data
 
 <% if @use_hiera_eyaml_gpg == true -%>
 :eyaml:
   :extension: 'yaml'
-  :datadir: /etc/puppet/environments/%{::environment}/hieradata
+  :datadir: /etc/puppet/environments/%{::environment}/data
   :gpg_gnupghome: '/var/lib/puppet/.gnupg'
 <% end -%>
 

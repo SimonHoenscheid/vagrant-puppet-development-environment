@@ -1,6 +1,7 @@
 .vagrant/**
 .idea/**
+.idea
 puppetmaster.gpg.sec
-clients/*/.*vagrant/**
+clients/*/.vagrant
 Vagrantfile
 .idea

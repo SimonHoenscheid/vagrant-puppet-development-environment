@@ -33,8 +33,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		puppet.vm.provision :shell, :path => "installation/install-puppetmaster5-deb.sh"
     puppet.vm.synced_folder "puppet5/", "/etc/puppetlabs/code/environments/production", create: true
 		puppet.vm.provider "virtualbox" do |v|
-			v.memory = 3072 
+			v.memory = 1024
 			v.cpus = 1
+			v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 
@@ -47,8 +48,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		postgres_puppetdb.vm.provision :shell, :path => "installation/prepare-install-deb.sh"
 		postgres_puppetdb.vm.provision :shell, :path => "installation/install-puppet5-deb.sh"
 		postgres_puppetdb.vm.provider "virtualbox" do |v|
-			v.memory = 1024 
+			v.memory = 512
 			v.cpus = 1
+			v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 
@@ -61,8 +63,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		puppetdb.vm.provision :shell, :path => "installation/prepare-install-deb.sh"
 		puppetdb.vm.provision :shell, :path => "installation/install-puppet5-deb.sh"
 		puppetdb.vm.provider "virtualbox" do |v|
-			v.memory = 1024 
+			v.memory = 512
 			v.cpus = 1
+			v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 end
