@@ -83,7 +83,7 @@ RSpec.configure do |c|
     end
 
     hosts.each do |host|
-      on host, "/bin/touch #{default['puppetpath']}/hiera.yaml"
+      on host, "/bin/touch #{default['puppetpath']}/hiera.5.yaml.erb"
       on host, 'chmod 755 /root'
       if fact_on(host, 'osfamily') == 'Debian'
         on host, "echo \"en_US ISO-8859-1\nen_NG.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\n\" > /etc/locale.gen"

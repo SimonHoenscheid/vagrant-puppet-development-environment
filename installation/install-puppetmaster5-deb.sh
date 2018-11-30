@@ -54,7 +54,7 @@ sudo echo '*.local' > /etc/puppetlabs/puppet/autosign.conf
 sudo service puppetserver restart
 
 echo "apply puppetmaster role"
-sudo /opt/puppetlabs/bin/puppet apply --hiera_config=/vagrant/puppet5/hieradata/hiera.yaml --modulepath=/vagrant/puppet5/modules -e'include site_module::roles::single_puppetmaster'
+sudo /opt/puppetlabs/bin/puppet apply --hiera_config=/vagrant/puppet5/data/hiera.yaml --modulepath=/vagrant/puppet5/modules -e'include site_module'
 
 echo "first run on the puppetserver"
 sudo /opt/puppetlabs/bin/puppet agent -t --server puppet.local

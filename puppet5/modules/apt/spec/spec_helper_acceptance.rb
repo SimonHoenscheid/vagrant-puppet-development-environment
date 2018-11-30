@@ -17,7 +17,7 @@ RSpec.configure do |c|
     # Install module and dependencies
     hosts.each do |host|
       copy_module_to(host, :source => proj_root, :module_name => 'apt')
-      shell("/bin/touch #{default['puppetpath']}/hiera.yaml")
+      shell("/bin/touch #{default['puppetpath']}/hiera.5.yaml.erb")
       on host, puppet('module install puppetlabs-stdlib --version 4.5.0'), { :acceptable_exit_codes => [0,1] }
     end
   end

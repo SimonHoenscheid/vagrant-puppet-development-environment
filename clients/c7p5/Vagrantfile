@@ -34,6 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc01.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 
@@ -48,6 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc02.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
   
@@ -62,6 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc03.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
   
@@ -76,6 +79,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc04.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
   
@@ -90,6 +94,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc05.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 	# puppetclient06 node
@@ -103,6 +108,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc06.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 
@@ -117,6 +123,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc07.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 	# puppetclient08 node
@@ -130,6 +137,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc08.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 	# puppetclient09 node
@@ -143,6 +151,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc09.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 	# puppetclient10 node
@@ -156,6 +165,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		pc10.vm.provider "virtualbox" do |v|
 			v.memory = 1024 
 			v.cpus = 1
+v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 		end
 	end
 end
