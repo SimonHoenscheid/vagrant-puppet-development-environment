@@ -59,5 +59,12 @@ sudo /opt/puppetlabs/bin/puppet apply --hiera_config=/vagrant/puppet5/data/hiera
 echo "first run on the puppetserver"
 sudo /opt/puppetlabs/bin/puppet agent -t --server puppet.local
 
+if [ -f /vagrant/puppetmaster.gpg.sec ]; then
+        #import private key for puppetmaster without password
+        sudo cp /vagrant/puppetmaster.gpg.sec /opt/puppetlabs/server/data/puppetserver/key
+        sudo chown puppet:puppet /opt/puppetlabs/server/data/puppetserver/key
+        sudo su puppet -s /bin/bash -c '/usr/bin/gpg --import /opt/puppetlabs/server/data/puppetserver/key'
+fi
+
 echo "restart puppetserver"
 sudo service puppetserver restart
