@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe 'puppet_agent', :unless => Puppet.version < "3.8.0" || Puppet.version >= "4.0.0" do
+describe 'puppet_agent' do
+  package_version = '1.2.5'
   before(:each) do
     # Need to mock the PE functions
     Puppet::Parser::Functions.newfunction(:pe_build_version, :type => :rvalue) do |args|
@@ -21,6 +22,12 @@ describe 'puppet_agent', :unless => Puppet.version < "3.8.0" || Puppet.version >
     :servername                => 'master.example.vm',
     :clientcert                => 'foo.example.vm',
   }
+
+  let(:params) do
+    {
+      :package_version => package_version
+    }
+  end
 
   describe 'unsupported environment' do
     context 'when not PE' do
@@ -62,40 +69,49 @@ describe 'puppet_agent', :unless => Puppet.version < "3.8.0" || Puppet.version >
         is_expected.to contain_file('/opt/puppetlabs/packages/puppet-agent-1.2.5-1.sles10.x86_64.rpm').with_source('puppet:///pe_packages/4.0.0/sles-10-x86_64/puppet-agent-1.2.5-1.sles10.x86_64.rpm')
       end
 
-      [
-        'pe-augeas',
-        'pe-mcollective-common',
-        'pe-rubygem-deep-merge',
-        'pe-mcollective',
-        'pe-puppet-enterprise-release',
-        'pe-libldap',
-        'pe-libyaml',
-        'pe-ruby-stomp',
-        'pe-ruby-augeas',
-        'pe-ruby-shadow',
-        'pe-hiera',
-        'pe-facter',
-        'pe-puppet',
-        'pe-openssl',
-        'pe-ruby',
-        'pe-ruby-rgen',
-        'pe-virt-what',
-        'pe-ruby-ldap',
-      ].each do |package|
+      it { is_expected.to contain_class("puppet_agent::osfamily::suse") }
+
+      if Puppet.version < "4.0.0"
+        it { is_expected.to contain_class("puppet_agent::prepare::package") }
+
         it do
-          is_expected.to contain_package(package).with_ensure('absent')
-          is_expected.to contain_package(package).with_uninstall_options('--nodeps')
-          is_expected.to contain_package(package).with_provider('rpm')
+          is_expected.to contain_exec('replace puppet.conf removed by package removal').with_command('cp /etc/puppetlabs/puppet/puppet.conf.rpmsave /etc/puppetlabs/puppet/puppet.conf')
+          is_expected.to contain_exec('replace puppet.conf removed by package removal').with_creates('/etc/puppetlabs/puppet/puppet.conf')
         end
+
+        it { is_expected.to contain_class("puppet_agent::install::remove_packages") }
+        [
+          'pe-augeas',
+          'pe-mcollective-common',
+          'pe-rubygem-deep-merge',
+          'pe-mcollective',
+          'pe-puppet-enterprise-release',
+          'pe-libldap',
+          'pe-libyaml',
+          'pe-ruby-stomp',
+          'pe-ruby-augeas',
+          'pe-ruby-shadow',
+          'pe-hiera',
+          'pe-facter',
+          'pe-puppet',
+          'pe-openssl',
+          'pe-ruby',
+          'pe-ruby-rgen',
+          'pe-virt-what',
+          'pe-ruby-ldap',
+        ].each do |package|
+          it do
+            is_expected.to contain_package(package).with_ensure('absent')
+            is_expected.to contain_package(package).with_uninstall_options('--nodeps')
+            is_expected.to contain_package(package).with_provider('rpm')
+          end
+        end
+        it { is_expected.to contain_package('puppet-agent').with_ensure('present') }
+      else
+        it { is_expected.to contain_package('puppet-agent').with_ensure('1.2.5') }
       end
 
       it do
-        is_expected.to contain_exec('replace puppet.conf removed by package removal').with_command('cp /etc/puppetlabs/puppet/puppet.conf.rpmsave /etc/puppetlabs/puppet/puppet.conf')
-        is_expected.to contain_exec('replace puppet.conf removed by package removal').with_creates('/etc/puppetlabs/puppet/puppet.conf')
-      end
-
-      it do
-        is_expected.to contain_package('puppet-agent').with_ensure('present')
         is_expected.to contain_package('puppet-agent').with_provider('rpm')
         is_expected.to contain_package('puppet-agent').with_source('/opt/puppetlabs/packages/puppet-agent-1.2.5-1.sles10.x86_64.rpm')
       end
@@ -111,41 +127,96 @@ describe 'puppet_agent', :unless => Puppet.version < "3.8.0" || Puppet.version >
             })
           end
 
-          it { is_expected.to contain_exec('import-RPM-GPG-KEY-puppetlabs').with({
+          it { is_expected.to contain_exec('import-GPG-KEY-puppet').with({
+            'path'      => '/bin:/usr/bin:/sbin:/usr/sbin',
+            'command'   => 'rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet',
+            'unless'    => 'rpm -q gpg-pubkey-$(echo $(gpg --homedir /root/.gnupg --throw-keyids < /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet) | cut --characters=11-18 | tr [:upper:] [:lower:])',
+            'require'   => 'File[/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet]',
+            'logoutput' => 'on_failure',
+          }) }
+
+          it { is_expected.to contain_exec('import-GPG-KEY-puppetlabs').with({
             'path'      => '/bin:/usr/bin:/sbin:/usr/sbin',
             'command'   => 'rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs',
-            'unless'    => 'rpm -q gpg-pubkey-$(echo $(gpg --homedir /root/.gnupg --throw-keyids < /etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs) | cut --characters=11-18 | tr [A-Z] [a-z])',
+            'unless'    => 'rpm -q gpg-pubkey-$(echo $(gpg --homedir /root/.gnupg --throw-keyids < /etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs) | cut --characters=11-18 | tr [:upper:] [:lower:])',
             'require'   => 'File[/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs]',
             'logoutput' => 'on_failure',
           }) }
 
-          ['/etc/pki', '/etc/pki/rpm-gpg'].each do |path|
-            it { is_expected.to contain_file(path).with({
-              'ensure' => 'directory',
-            }) }
+          context 'with manage_pki_dir => true' do
+            ['/etc/pki', '/etc/pki/rpm-gpg'].each do |path|
+              it { is_expected.to contain_file(path).with({
+                'ensure' => 'directory',
+              }) }
+            end
           end
+
+          context 'with manage_pki_dir => false' do
+            let(:params) {{ :manage_pki_dir => 'false' }}
+            ['/etc/pki', '/etc/pki/rpm-gpg'].each do |path|
+              it { is_expected.not_to contain_file(path) }
+            end
+          end
+
+          it { is_expected.to contain_class("puppet_agent::osfamily::suse") }
 
           it { is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs').with({
             'ensure' => 'present',
             'owner'  => '0',
             'group'  => '0',
             'mode'   => '0644',
-            'source' => 'puppet:///modules/puppet_agent/RPM-GPG-KEY-puppetlabs',
+            'source' => 'puppet:///modules/puppet_agent/GPG-KEY-puppetlabs',
           }) }
 
-          {
-            'name'        => 'pc1_repo',
-            'enabled'      => '1',
-            'autorefresh' => '0',
-            'baseurl'     => "https://master.example.vm:8140/packages/4.0.0/sles-#{os_version}-x86_64?ssl_verify=no",
-            'type'        => 'rpm-md',
-          }.each do |setting, value|
-              it { is_expected.to contain_ini_setting("zypper pc1_repo #{setting}").with({
-                'path'    => '/etc/zypp/repos.d/pc1_repo.repo',
-                'section' => 'pc1_repo',
+          it { is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet').with({
+            'ensure' => 'present',
+            'owner'  => '0',
+            'group'  => '0',
+            'mode'   => '0644',
+            'source' => 'puppet:///modules/puppet_agent/GPG-KEY-puppet',
+          }) }
+
+          context "with manage_repo enabled" do
+            let(:params) {
+              {
+                :manage_repo => true,
+                :package_version => package_version
+              }
+            }
+
+            {
+              'name'        => 'pc_repo',
+              'enabled'     => '1',
+              'autorefresh' => '0',
+              'baseurl'     => "https://master.example.vm:8140/packages/4.0.0/sles-#{os_version}-x86_64?ssl_verify=no",
+              'type'        => 'rpm-md',
+            }.each do |setting, value|
+              it { is_expected.to contain_ini_setting("zypper pc_repo #{setting}").with({
+                'path'    => '/etc/zypp/repos.d/pc_repo.repo',
+                'section' => 'pc_repo',
                 'setting' => setting,
                 'value'   => value,
               }) }
+            end
+          end
+
+          context "with manage_repo disabled" do
+            let(:params) {
+              {
+                :manage_repo => false,
+                :package_version => package_version
+              }
+            }
+
+            [
+              'name',
+              'enabled',
+              'autorefresh',
+              'baseurl',
+              'type',
+            ].each do |setting|
+              it { is_expected.not_to contain_ini_setting("zypper pc_repo #{setting}") }
+            end
           end
 
           it do

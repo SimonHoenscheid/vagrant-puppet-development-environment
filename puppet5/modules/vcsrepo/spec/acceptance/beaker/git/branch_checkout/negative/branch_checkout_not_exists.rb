@@ -7,7 +7,7 @@ hosts.each do |host|
   tmpdir = host.tmpdir('vcsrepo')
   step 'setup - create repo' do
     git_pkg = 'git'
-    if host['platform'] =~ /ubuntu-10/
+    if host['platform'] =~ %r{ubuntu-10}
       git_pkg = 'git-core'
     end
     install_package(host, git_pkg)
@@ -21,26 +21,25 @@ hosts.each do |host|
   end
 
   step 'checkout branch that does not exist with puppet' do
-    pp = <<-EOS
+    pp = <<-MANIFEST
     vcsrepo { "#{tmpdir}/#{repo_name}":
       ensure => present,
       source => "file://#{tmpdir}/testrepo.git",
       provider => git,
       revision => 'non_existent_branch',
     }
-    EOS
+    MANIFEST
 
-    apply_manifest_on(host, pp, :expect_failures => true)
+    apply_manifest_on(host, pp, expect_failures: true)
   end
 
   step 'verify that master branch is checked out' do
     on(host, "ls #{tmpdir}/#{repo_name}/.git/") do |res|
-      fail_test('checkout not found') unless res.stdout.include? "HEAD"
+      fail_test('checkout not found') unless res.stdout.include? 'HEAD'
     end
 
     on(host, "cat #{tmpdir}/#{repo_name}/.git/HEAD") do |res|
-      fail_test('branch not found') unless res.stdout.include? "ref: refs/heads/master"
+      fail_test('branch not found') unless res.stdout.include? 'ref: refs/heads/master'
     end
   end
-
 end

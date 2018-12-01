@@ -1,9 +1,12 @@
+# Manifest containing module parameters
 class firewall::params {
+  $package_ensure = 'present'
   case $::osfamily {
     'RedHat': {
+      $service_name = 'iptables'
+      $service_name_v6 = 'ip6tables'
       case $::operatingsystem {
         'Amazon': {
-          $service_name = 'iptables'
           $package_name = undef
         }
         'Fedora': {
@@ -12,7 +15,6 @@ class firewall::params {
           } else {
             $package_name = undef
           }
-          $service_name = 'iptables'
         }
         default: {
           if versioncmp($::operatingsystemrelease, '7.0') >= 0 {
@@ -20,11 +22,11 @@ class firewall::params {
           } else {
             $package_name = 'iptables-ipv6'
           }
-          $service_name = 'iptables'
         }
       }
     }
     'Debian': {
+      $service_name_v6 = undef
       case $::operatingsystem {
         'Debian': {
           if versioncmp($::operatingsystemrelease, '8.0') >= 0 {
@@ -54,9 +56,11 @@ class firewall::params {
     }
     'Gentoo': {
       $service_name = ['iptables','ip6tables']
+      $service_name_v6 = undef
       $package_name = 'net-firewall/iptables'
     }
     default: {
+      $service_name_v6 = undef
       case $::operatingsystem {
         'Archlinux': {
           $service_name = ['iptables','ip6tables']

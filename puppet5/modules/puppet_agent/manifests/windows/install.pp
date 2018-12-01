@@ -6,7 +6,10 @@
 #
 class puppet_agent::windows::install(
   $package_file_name,
-  $source = $::puppet_agent::source,
+  $source                = $::puppet_agent::source,
+  $install_dir           = undef,
+  $install_options       = [],
+  $msi_move_locked_files = $::puppet_agent::msi_move_locked_files,
   ) {
   assert_private()
 
@@ -17,6 +20,11 @@ class puppet_agent::windows::install(
   }
   else {
     $_https_source = "https://downloads.puppetlabs.com/windows/${package_file_name}"
+  }
+
+  $_install_options = $install_options ? {
+    []      => ['REINSTALLMODE="amus"'],
+    default => $install_options
   }
 
   $_source = $source ? {
@@ -43,6 +51,12 @@ class puppet_agent::windows::install(
     default => "${::system32}\\cmd.exe"
   }
 
+  if (member($::puppet_agent::service_names, 'puppet')) {
+    $_agent_startup_mode = 'Automatic'
+  } else {
+    $_agent_startup_mode = undef
+  }
+
   $_timestamp = strftime('%Y_%m_%d-%H_%M')
   $_logfile = windows_native_path("${::env_temp_variable}/puppet-${_timestamp}-installer.log")
   $_puppet_master = $::puppet_master_server
@@ -51,9 +65,16 @@ class puppet_agent::windows::install(
   file { "${_installbat}":
     ensure  => file,
     content => template('puppet_agent/install_puppet.bat.erb')
-  }->
-  exec { 'install_puppet.bat':
+  }
+  -> exec { 'install_puppet.bat':
     command => "${::system32}\\cmd.exe /c start /b ${_cmd_location} /c \"${_installbat}\" ${::puppet_agent_pid}",
     path    => $::path,
+  }
+
+  # PUP-5480/PE-15037 Cache dir loses inheritable SYSTEM perms
+  exec { 'fix inheritable SYSTEM perms':
+    command => "${::system32}\\icacls.exe \"${::puppet_client_datadir}\" /grant \"SYSTEM:(OI)(CI)(F)\"",
+    unless  => "${::system32}\\icacls.exe \"${::puppet_client_datadir}\" | findstr \"SYSTEM:(OI)(CI)(F)\"",
+    require => Exec['install_puppet.bat'],
   }
 }

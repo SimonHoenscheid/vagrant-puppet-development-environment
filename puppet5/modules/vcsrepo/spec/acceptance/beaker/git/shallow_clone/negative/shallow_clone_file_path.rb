@@ -8,7 +8,7 @@ hosts.each do |host|
   tmpdir = host.tmpdir('vcsrepo')
   step 'setup - create repo' do
     git_pkg = 'git'
-    if host['platform'] =~ /ubuntu-10/
+    if host['platform'] =~ %r{ubuntu-10}
       git_pkg = 'git-core'
     end
     install_package(host, git_pkg)
@@ -22,23 +22,22 @@ hosts.each do |host|
   end
 
   step 'shallow clone repo with puppet' do
-    pp = <<-EOS
+    pp = <<-MANIFEST
     vcsrepo { "#{tmpdir}/#{repo_name}":
       ensure => present,
       source => "#{tmpdir}/testrepo.git",
       provider => git,
       depth => 1,
     }
-    EOS
+    MANIFEST
 
-    apply_manifest_on(host, pp, :catch_failures => true)
-    apply_manifest_on(host, pp, :catch_changes  => true)
+    apply_manifest_on(host, pp, catch_failures: true)
+    apply_manifest_on(host, pp, catch_changes: true)
   end
 
   step 'git does not support shallow clone via file path: verify checkout is NOT created' do
     on(host, "ls #{tmpdir}") do |res|
-      fail_test('checkout found') if res.stdout.include? "#{repo_name}"
+      fail_test('checkout found') if res.stdout.include? repo_name.to_s
     end
   end
-
 end

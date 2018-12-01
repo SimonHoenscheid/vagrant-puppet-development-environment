@@ -14,21 +14,25 @@
 #   Default: true
 #
 class firewall::linux::debian (
-  $ensure       = running,
-  $enable       = true,
-  $service_name = $::firewall::params::service_name,
-  $package_name = $::firewall::params::package_name,
+  $ensure         = running,
+  $enable         = true,
+  $service_name   = $::firewall::params::service_name,
+  $package_name   = $::firewall::params::package_name,
+  $package_ensure = $::firewall::params::package_ensure,
 ) inherits ::firewall::params {
 
   if $package_name {
     #Fixes hang while installing iptables-persistent on debian 8
     exec {'iptables-persistent-debconf':
-        command     => "/bin/echo \"${package_name} ${package_name}/autosave_v4 boolean false\" | /usr/bin/debconf-set-selections && /bin/echo \"${package_name} ${package_name}/autosave_v6 boolean false\" | /usr/bin/debconf-set-selections",
-        refreshonly => true
+        command     => "/bin/echo \"${package_name} ${package_name}/autosave_v4 boolean false\" |
+                      /usr/bin/debconf-set-selections && /bin/echo \"${package_name} ${package_name}/autosave_v6 boolean false\" |
+                      /usr/bin/debconf-set-selections",
+
+        refreshonly => true,
     }
     package { $package_name:
-      ensure  => present,
-      require => Exec['iptables-persistent-debconf']
+      ensure  => $package_ensure,
+      require => Exec['iptables-persistent-debconf'],
     }
   }
 

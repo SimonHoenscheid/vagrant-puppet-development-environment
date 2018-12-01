@@ -8,7 +8,7 @@ hosts.each do |host|
   tmpdir = host.tmpdir('vcsrepo')
   step 'setup - create repo' do
     git_pkg = 'git'
-    if host['platform'] =~ /ubuntu-10/
+    if host['platform'] =~ %r{ubuntu-10}
       git_pkg = 'git-core'
     end
     install_package(host, git_pkg)
@@ -18,38 +18,37 @@ hosts.each do |host|
   end
 
   step 'setup - start http server' do
-    http_daemon =<<-EOF
+    http_daemon = <<-MANIFEST
     require 'webrick'
     server = WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => "#{tmpdir}")
     WEBrick::Daemon.start
     server.start
-    EOF
+    MANIFEST
     create_remote_file(host, '/tmp/http_daemon.rb', http_daemon)
     on(host, "#{ruby} /tmp/http_daemon.rb")
   end
 
   teardown do
     on(host, "rm -fr #{tmpdir}")
-    on(host, 'ps ax | grep "#{ruby} /tmp/http_daemon.rb" | grep -v grep | awk \'{print "kill -9 " $1}\' | sh ; sleep 1')
+    on(host, "'ps ax | grep \"#{ruby} /tmp/http_daemon.rb\" | grep -v grep | awk \'{print \"kill -9 \" $1}\' | sh ; sleep 1'")
   end
 
   step 'shallow clone repo with puppet' do
-    pp = <<-EOS
+    pp = <<-MANIFEST
     vcsrepo { "#{tmpdir}/#{repo_name}":
       ensure => present,
       source => "http://#{host}:8000/testrepo.git",
       provider => git,
       depth => 1,
     }
-    EOS
+    MANIFEST
 
-    apply_manifest_on(host, pp, :expect_failures => true)
+    apply_manifest_on(host, pp, expect_failures: true)
   end
 
   step 'git does not support shallow clone via HTTP: verify checkout is NOT created' do
     on(host, "ls #{tmpdir}") do |res|
-      fail_test('checkout found') if res.stdout.include? "#{repo_name}"
+      fail_test('checkout found') if res.stdout.include? repo_name.to_s
     end
   end
-
 end

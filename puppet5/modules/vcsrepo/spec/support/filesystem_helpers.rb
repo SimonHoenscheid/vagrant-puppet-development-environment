@@ -1,5 +1,5 @@
+# filesystem_helpers.rb
 module FilesystemHelpers
-
   def expects_chdir(path = resource.value(:path))
     Dir.expects(:chdir).with(path).at_least_once.yields
   end

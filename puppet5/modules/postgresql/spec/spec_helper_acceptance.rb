@@ -1,16 +1,33 @@
+require 'beaker-pe'
+require 'beaker-puppet'
+require 'puppet'
 require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
+require 'beaker/module_install_helper'
+require 'beaker-task_helper'
 
 run_puppet_install_helper
+configure_type_defaults_on(hosts)
+install_ca_certs unless pe_install?
 
-UNSUPPORTED_PLATFORMS = ['AIX','windows','Solaris','Suse']
+UNSUPPORTED_PLATFORMS = ['AIX', 'windows', 'Solaris', 'Suse'].freeze
 
+install_bolt_on(hosts) unless pe_install?
+install_module_on(hosts)
+install_module_dependencies_on(hosts)
+
+DEFAULT_PASSWORD = if default[:hypervisor] == 'vagrant'
+                     'vagrant'
+                   elsif default[:hypervisor] == 'vcloud'
+                     'Qu@lity!'
+                   end
+
+# Class String - unindent - Provide ability to remove indentation from strings, for the purpose of
+# left justifying heredoc blocks.
 class String
-  # Provide ability to remove indentation from strings, for the purpose of
-  # left justifying heredoc blocks.
   def unindent
-    gsub(/^#{scan(/^\s*/).min_by{|l|l.length}}/, "")
+    gsub(%r{^#{scan(%r{^\s*}).min_by { |l| l.length }}}, '')
   end
 end
 
@@ -25,33 +42,27 @@ def shellescape(str)
   # Treat multibyte characters as is.  It is caller's responsibility
   # to encode the string in the right encoding for the shell
   # environment.
-  str.gsub!(/([^A-Za-z0-9_\-.,:\/@\n])/, "\\\\\\1")
+  str.gsub!(%r{([^A-Za-z0-9_\-.,:\/@\n])}, '\\\\\\1')
 
   # A LF cannot be escaped with a backslash because a backslash + LF
   # combo is regarded as line continuation and simply ignored.
-  str.gsub!(/\n/, "'\n'")
+  str.gsub!(%r{\n}, "'\n'")
 
-  return str
+  str
 end
 
-def psql(psql_cmd, user = 'postgres', exit_codes = [0,1], &block)
+def psql(psql_cmd, user = 'postgres', exit_codes = [0, 1], &block)
   psql = "psql #{psql_cmd}"
-  shell("su #{shellescape(user)} -c #{shellescape(psql)}", :acceptable_exit_codes => exit_codes, &block)
+  shell("su #{shellescape(user)} -c #{shellescape(psql)}", acceptable_exit_codes: exit_codes, &block)
 end
-
 
 RSpec.configure do |c|
-  # Project root
-  proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-
   # Readable test descriptions
   c.formatter = :documentation
 
   # Configure all nodes in nodeset
   c.before :suite do
-    # Install module and dependencies
-    puppet_module_install(:source => proj_root, :module_name => 'postgresql')
-
+    run_puppet_access_login(user: 'admin') if pe_install? && (Gem::Version.new(puppet_version) >= Gem::Version.new('5.0.0'))
     # Set up selinux if appropriate.
     if fact('osfamily') == 'RedHat' && fact('selinux') == 'true'
       pp = <<-EOS
@@ -70,32 +81,26 @@ RSpec.configure do |c|
         }
       EOS
 
-      apply_manifest_on(agents, pp, :catch_failures => false)
+      apply_manifest_on(agents, pp, catch_failures: false)
     end
 
     # net-tools required for netstat utility being used by be_listening
-    if fact('osfamily') == 'RedHat' && fact('operatingsystemmajrelease') == '7'
+    if fact('osfamily') == 'RedHat' && fact('operatingsystemmajrelease') == '7' ||
+       fact('osfamily') == 'Debian' && fact('operatingsystemmajrelease') == '9' ||
+       fact('osfamily') == 'Debian' && fact('operatingsystemmajrelease') == '18.04'
       pp = <<-EOS
         package { 'net-tools': ensure => installed }
       EOS
 
-      apply_manifest_on(agents, pp, :catch_failures => false)
+      apply_manifest_on(agents, pp, catch_failures: false)
     end
 
     hosts.each do |host|
-      on host, "/bin/touch #{default['puppetpath']}/hiera.5.yaml.erb"
       on host, 'chmod 755 /root'
-      if fact_on(host, 'osfamily') == 'Debian'
-        on host, "echo \"en_US ISO-8859-1\nen_NG.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\n\" > /etc/locale.gen"
-        on host, '/usr/sbin/locale-gen'
-        on host, '/usr/sbin/update-locale'
-      end
-
-      on host, puppet('module','install','puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
-      on host, puppet('module','install','puppetlabs-apt'), { :acceptable_exit_codes => [0,1] }
-      on host, puppet('module','install','--force','puppetlabs-concat'), { :acceptable_exit_codes => [0,1] }
+      next unless fact_on(host, 'osfamily') == 'Debian'
+      on host, "echo \"en_US ISO-8859-1\nen_NG.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\n\" > /etc/locale.gen"
+      on host, '/usr/sbin/locale-gen'
+      on host, '/usr/sbin/update-locale'
     end
-
-
   end
 end

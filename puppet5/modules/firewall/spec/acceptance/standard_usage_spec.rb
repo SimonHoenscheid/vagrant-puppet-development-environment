@@ -1,9 +1,8 @@
 require 'spec_helper_acceptance'
 
 # Some tests for the standard recommended usage
-describe 'standard usage tests:', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
-  it 'applies twice' do
-    pp = <<-EOS
+describe 'standard usage tests' do
+  pp = <<-PUPPETCODE
       class my_fw::pre {
         Firewall {
           require => undef,
@@ -51,10 +50,10 @@ describe 'standard usage tests:', :unless => UNSUPPORTED_PLATFORMS.include?(fact
         proto => 'tcp',
         dport => 22,
       }
-    EOS
-
+  PUPPETCODE
+  it 'applies twice' do
     # Run it twice and test for idempotency
-    apply_manifest(pp, :catch_failures => true)
-    apply_manifest(pp, :catch_changes => do_catch_changes)
+    apply_manifest(pp, catch_failures: true)
+    apply_manifest(pp, catch_changes: do_catch_changes)
   end
 end

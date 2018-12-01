@@ -1,7 +1,6 @@
 require File.expand_path('../../../util/ini_file', __FILE__)
 
 Puppet::Type.type(:ini_setting).provide(:ruby) do
-
   def self.instances
     # this code is here to support purging and the query-all functionality of the
     # 'puppet resource' command, on a per-file basis.  Users
@@ -12,25 +11,23 @@ Puppet::Type.type(:ini_setting).provide(:ruby) do
     # declaration).  This allows 'purging' to be used to clear out
     # all settings from a particular ini file except those included in
     # the catalog.
-    if self.respond_to?(:file_path)
-      # figure out what to do about the seperator
-      ini_file  = Puppet::Util::IniFile.new(file_path, '=')
-      resources = []
-      ini_file.section_names.each do |section_name|
-        ini_file.get_settings(section_name).each do |setting, value|
-          resources.push(
-            new(
-              :name   => namevar(section_name, setting),
-              :value  => value,
-              :ensure => :present
-            )
-          )
-        end
+    raise(Puppet::Error, 'Ini_settings only support collecting instances when a file path is hard coded') unless respond_to?(:file_path)
+
+    # figure out what to do about the seperator
+    ini_file  = Puppet::Util::IniFile.new(file_path, '=')
+    resources = []
+    ini_file.section_names.each do |section_name|
+      ini_file.get_settings(section_name).each do |setting, value|
+        resources.push(
+          new(
+            name: namevar(section_name, setting),
+            value: value,
+            ensure: :present,
+          ),
+        )
       end
-      resources
-    else
-      raise(Puppet::Error, 'Ini_settings only support collecting instances when a file path is hard coded')
     end
+    resources
   end
 
   def self.namevar(section_name, setting)
@@ -38,11 +35,26 @@ Puppet::Type.type(:ini_setting).provide(:ruby) do
   end
 
   def exists?
-    !ini_file.get_value(section, setting).nil?
+    if ini_file.section?(section)
+      !ini_file.get_value(section, setting).nil?
+    elsif resource.parameters.keys.include?(:force_new_section_creation) && !resource[:force_new_section_creation]
+      # for backwards compatibility, if a user is using their own ini_setting
+      # types but does not have this parameter, we need to fall back to the
+      # previous functionality which was to create the section.  Anyone
+      # wishing to leverage this setting must define it in their provider
+      # type. See comments on
+      # https://github.com/puppetlabs/puppetlabs-inifile/pull/286
+      resource[:ensure] = :absent
+      resource[:force_new_section_creation]
+    elsif resource.parameters.keys.include?(:force_new_section_creation) && resource[:force_new_section_creation]
+      !resource[:force_new_section_creation]
+    else
+      false
+    end
   end
 
   def create
-    ini_file.set_value(section, setting, resource[:value])
+    ini_file.set_value(section, setting, separator, resource[:value])
     ini_file.save
     @ini_file = nil
   end
@@ -57,8 +69,8 @@ Puppet::Type.type(:ini_setting).provide(:ruby) do
     ini_file.get_value(section, setting)
   end
 
-  def value=(value)
-    ini_file.set_value(section, setting, resource[:value])
+  def value=(_value)
+    ini_file.set_value(section, setting, separator, resource[:value])
     ini_file.save
   end
 
@@ -110,9 +122,25 @@ Puppet::Type.type(:ini_setting).provide(:ruby) do
     end
   end
 
-  private
-  def ini_file
-    @ini_file ||= Puppet::Util::IniFile.new(file_path, separator, section_prefix, section_suffix)
+  def indent_char
+    if resource.class.validattr?(:indent_char)
+      resource[:indent_char] || ' '
+    else
+      ' '
+    end
   end
 
+  def indent_width
+    if resource.class.validattr?(:indent_width)
+      resource[:indent_width] || nil
+    else
+      nil
+    end
+  end
+
+  private
+
+  def ini_file
+    @ini_file ||= Puppet::Util::IniFile.new(file_path, separator, section_prefix, section_suffix, indent_char, indent_width)
+  end
 end

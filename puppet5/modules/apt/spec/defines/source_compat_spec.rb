@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'apt::source', :type => :define do
-  GPG_KEY_ID = '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30'
+  GPG_KEY_ID = '6F6B15509CF8E59E6E469F327F438280EF8D349F'
 
   let :title do
     'my_source'
@@ -13,6 +13,7 @@ describe 'apt::source', :type => :define do
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
         :osfamily        => 'Debian',
+        :puppetversion   => Puppet.version,
       }
     end
 
@@ -33,7 +34,8 @@ describe 'apt::source', :type => :define do
       {
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
-        :osfamily        => 'Debian'
+        :osfamily        => 'Debian',
+        :puppetversion   => Puppet.version,
       }
     end
     let :params do
@@ -88,7 +90,8 @@ describe 'apt::source', :type => :define do
       {
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
-        :osfamily        => 'Debian'
+        :osfamily        => 'Debian',
+        :puppetversion   => Puppet.version,
       }
     end
     let :params do
@@ -107,7 +110,8 @@ describe 'apt::source', :type => :define do
       {
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
-        :osfamily        => 'Debian'
+        :osfamily        => 'Debian',
+        :puppetversion   => Puppet.version,
       }
     end
     let :params do
@@ -117,7 +121,7 @@ describe 'apt::source', :type => :define do
       }
     end
 
-    it { is_expected.to contain_apt__setting('list-my_source').with_content(/# my_source\ndeb \[arch=x86_64 \] http:\/\/debian\.mirror\.iweb\.ca\/debian\/ wheezy main\n/)
+    it { is_expected.to contain_apt__setting('list-my_source').with_content(/# my_source\ndeb \[arch=x86_64\] http:\/\/debian\.mirror\.iweb\.ca\/debian\/ wheezy main\n/)
     }
   end
 
@@ -126,7 +130,8 @@ describe 'apt::source', :type => :define do
       {
         :lsbdistid       => 'Debian',
         :lsbdistcodename => 'wheezy',
-        :osfamily        => 'Debian'
+        :osfamily        => 'Debian',
+        :puppetversion   => Puppet.version,
       }
     end
     let :params do
@@ -146,7 +151,8 @@ describe 'apt::source', :type => :define do
       let :facts do
         {
           :lsbdistid       => 'Debian',
-          :osfamily        => 'Debian'
+          :osfamily        => 'Debian',
+          :puppetversion   => Puppet.version,
         }
       end
 

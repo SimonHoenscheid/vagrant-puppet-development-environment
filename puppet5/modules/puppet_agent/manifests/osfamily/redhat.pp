@@ -3,14 +3,24 @@ class puppet_agent::osfamily::redhat(
 ) {
   assert_private()
 
+  $pa_collection = getvar('::puppet_agent::collection')
+  $skip_if_unavailable = getvar('::puppet_agent::skip_if_unavailable')
+
   if $::operatingsystem == 'Fedora' {
-    $urlbit = 'fedora/f$releasever'
+    if $pa_collection == 'PC1' {
+      $urlbit = 'fedora/f$releasever'
+    } else {
+      $urlbit = 'fedora/$releasever'
+    }
+  }
+  elsif $::operatingsystem == 'Amazon' {
+    $urlbit = 'el/6'
   }
   else {
     $urlbit = 'el/$releasever'
   }
 
-  if $::puppet_agent::is_pe {
+  if getvar('::puppet_agent::is_pe') == true {
     # In Puppet Enterprise, agent packages are served by the same server
     # as the master, which can be using either a self signed CA, or an external CA.
     # In order for yum to authenticate to the yumrepo on the PE Master, it will need
@@ -24,7 +34,7 @@ class puppet_agent::osfamily::redhat(
     $_sslclientkey_path = "${_ssl_dir}/private_keys/${::clientcert}.pem"
 
     $pe_server_version = pe_build_version()
-    $source = "${::puppet_agent::source}/${pe_server_version}/${::platform_tag}"
+    $source = "${::puppet_agent::source}/${pe_server_version}/${::puppet_agent::params::pe_repo_dir}"
 
     # Due to the file paths changing on the PE Master, the 3.8 repository is no longer valid.
     # On upgrade, remove the repo file so that a dangling reference is not left behind returning
@@ -34,17 +44,49 @@ class puppet_agent::osfamily::redhat(
     }
   }
   else {
-    $source = $::puppet_agent::source ? {
-      undef   => "https://yum.puppetlabs.com/${urlbit}/PC1/${::architecture}",
-      default => $::puppet_agent::source,
+    $_sslcacert_path = undef
+    $_sslclientcert_path = undef
+    $_sslclientkey_path = undef
+
+    if $pa_collection == 'PC1' {
+      $_default_source = "http://yum.puppetlabs.com/${urlbit}/${pa_collection}/${::architecture}"
+    } else {
+      $_default_source = "http://yum.puppetlabs.com/${pa_collection}/${urlbit}/${::architecture}"
+    }
+    $source = getvar('::puppet_agent::source') ? {
+      undef   => $_default_source,
+      default => getvar('::puppet_agent::source'),
     }
   }
 
-  $keyname = 'RPM-GPG-KEY-puppetlabs'
-  $gpg_path = "/etc/pki/rpm-gpg/${keyname}"
+  $legacy_keyname = 'GPG-KEY-puppetlabs'
+  $legacy_gpg_path = "/etc/pki/rpm-gpg/RPM-${legacy_keyname}"
+  $keyname = 'GPG-KEY-puppet'
+  $gpg_path = "/etc/pki/rpm-gpg/RPM-${keyname}"
+  $gpg_keys = "file://${legacy_gpg_path}
+  file://${gpg_path}"
 
-  file { ['/etc/pki', '/etc/pki/rpm-gpg']:
-    ensure => directory,
+  if getvar('::puppet_agent::manage_pki_dir') == true {
+    file { ['/etc/pki', '/etc/pki/rpm-gpg']:
+      ensure => directory,
+    }
+  }
+
+  file { $legacy_gpg_path:
+    ensure => present,
+    owner  => 0,
+    group  => 0,
+    mode   => '0644',
+    source => "puppet:///modules/puppet_agent/${legacy_keyname}",
+  }
+
+  # Given the path to a key, see if it is imported, if not, import it
+  exec {  "import-${legacy_keyname}":
+    path      => '/bin:/usr/bin:/sbin:/usr/sbin',
+    command   => "rpm --import ${legacy_gpg_path}",
+    unless    => "rpm -q gpg-pubkey-`echo $(gpg --throw-keyids < ${legacy_gpg_path}) | cut --characters=11-18 | tr '[:upper:]' '[:lower:]'`",
+    require   => File[$legacy_gpg_path],
+    logoutput => 'on_failure',
   }
 
   file { $gpg_path:
@@ -59,20 +101,27 @@ class puppet_agent::osfamily::redhat(
   exec {  "import-${keyname}":
     path      => '/bin:/usr/bin:/sbin:/usr/sbin',
     command   => "rpm --import ${gpg_path}",
-    unless    => "rpm -q gpg-pubkey-`echo $(gpg --throw-keyids < ${gpg_path}) | cut --characters=11-18 | tr [A-Z] [a-z]`",
+    unless    => "rpm -q gpg-pubkey-`echo $(gpg --throw-keyids < ${gpg_path}) | cut --characters=11-18 | tr '[:upper:]' '[:lower:]'`",
     require   => File[$gpg_path],
     logoutput => 'on_failure',
   }
 
-  yumrepo { 'pc1_repo':
-    baseurl       => $source,
-    descr         => 'Puppet Labs PC1 Repository',
-    enabled       => true,
-    gpgcheck      => '1',
-    gpgkey        => "file://${gpg_path}",
-    sslcacert     => $_sslcacert_path,
-    sslclientcert => $_sslclientcert_path,
-    sslclientkey  => $_sslclientkey_path,
+  if getvar('::puppet_agent::manage_repo') == true {
+    $_proxy = getvar('puppet_agent::disable_proxy') ? {
+      true    => '_none_',
+      default => undef,
+    }
+    yumrepo { 'pc_repo':
+      baseurl             => $source,
+      descr               => "Puppet Labs ${pa_collection} Repository",
+      enabled             => true,
+      gpgcheck            => '1',
+      gpgkey              => "${gpg_keys}",
+      proxy               => $_proxy,
+      sslcacert           => $_sslcacert_path,
+      sslclientcert       => $_sslclientcert_path,
+      sslclientkey        => $_sslclientkey_path,
+      skip_if_unavailable => $skip_if_unavailable,
+    }
   }
 }
-

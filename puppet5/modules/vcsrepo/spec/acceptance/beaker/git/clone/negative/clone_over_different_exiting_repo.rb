@@ -7,7 +7,7 @@ hosts.each do |host|
   tmpdir = host.tmpdir('vcsrepo')
   step 'setup - create repo' do
     git_pkg = 'git'
-    if host['platform'] =~ /ubuntu-10/
+    if host['platform'] =~ %r{ubuntu-10}
       git_pkg = 'git-core'
     end
     install_package(host, git_pkg)
@@ -27,21 +27,20 @@ hosts.each do |host|
     on(host, "cd #{tmpdir}/#{repo_name} && git log --pretty=format:\"%h\"") do |res|
       @existing_sha = res.stdout
     end
-    pp = <<-EOS
+    pp = <<-MANIFEST
     vcsrepo { "#{tmpdir}/#{repo_name}":
       ensure => present,
       source => "file://#{tmpdir}/testrepo.git",
       provider => git,
     }
-    EOS
+    MANIFEST
 
-    apply_manifest_on(host, pp, :expect_failures => true)
+    apply_manifest_on(host, pp, expect_failures: true)
   end
 
   step 'verify original repo was not replaced' do
     on(host, "cd #{tmpdir}/#{repo_name} && git log --pretty=format:\"%h\"") do |res|
-      fail_test('original repo was replaced without force') unless res.stdout.include? "#{@existing_sha}"
+      fail_test('original repo was replaced without force') unless res.stdout.include? @existing_sha.to_s
     end
   end
-
 end

@@ -7,7 +7,7 @@ describe 'apt::key' do
 
   let(:facts) { { :lsbdistid => 'Debian', :osfamily => 'Debian', :lsbdistcodename => 'wheezy', :puppetversion   => Puppet.version, } }
 
-  GPG_KEY_ID = '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30'
+  GPG_KEY_ID = '6F6B15509CF8E59E6E469F327F438280EF8D349F'
 
   let :title do
     GPG_KEY_ID
@@ -268,13 +268,15 @@ describe 'apt::key' do
     end
 
     context 'invalid ensure' do
-      let :params do
-        {
-          :ensure => 'foo',
-        }
-      end
-      it 'fails' do
-        expect { subject.call }.to raise_error(/does not match/)
+      %w(foo aabsent absenta apresent presenta).each do |param|
+        let :params do
+          {
+            :ensure => param,
+          }
+          end
+        it 'fails' do
+          expect { subject.call }.to raise_error(/does not match/)
+        end
       end
     end
 

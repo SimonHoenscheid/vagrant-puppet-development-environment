@@ -1,28 +1,173 @@
+# Change log
+
+All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
+
+## [1.14.0](https://github.com/puppetlabs/puppetlabs-firewall/tree/1.14.0) (2018-09-27)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-firewall/compare/1.13.0...1.14.0)
+
+### Added
+
+- pdksync - \(MODULES-6805\) metadata.json shows support for puppet 6 [\#782](https://github.com/puppetlabs/puppetlabs-firewall/pull/782) ([tphoney](https://github.com/tphoney))
+- \(FM-7399\) - Prepare for changelog generator [\#780](https://github.com/puppetlabs/puppetlabs-firewall/pull/780) ([pmcmaw](https://github.com/pmcmaw))
+
+## 1.13.0
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-firewall/compare/1.12.0...1.13.0)
+
+### Added
+
+- pdksync - \(MODULES-7705\) - Bumping stdlib dependency from \< 5.0.0 to \< 6.0.0 [\#775](https://github.com/puppetlabs/puppetlabs-firewall/pull/775) ([pmcmaw](https://github.com/pmcmaw))
+- Add support for Amazon Linux 2 [\#768](https://github.com/puppetlabs/puppetlabs-firewall/pull/768) ([erik-frontify](https://github.com/erik-frontify))
+- \(FM-7232\) - Update firewall to support Ubuntu 18.04 [\#767](https://github.com/puppetlabs/puppetlabs-firewall/pull/767) ([david22swan](https://github.com/david22swan))
+- \[FM-7044\] Addition of Debian 9 support to firewall [\#765](https://github.com/puppetlabs/puppetlabs-firewall/pull/765) ([david22swan](https://github.com/david22swan))
+- \[FM-6961\] Removal of unsupported OS from firewall [\#764](https://github.com/puppetlabs/puppetlabs-firewall/pull/764) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- \(MODULES-7627\) - Update README Limitations section [\#769](https://github.com/puppetlabs/puppetlabs-firewall/pull/769) ([eimlav](https://github.com/eimlav))
+- Corrections to readme [\#766](https://github.com/puppetlabs/puppetlabs-firewall/pull/766) ([alexharv074](https://github.com/alexharv074))
+- \(MODULES-6129\) negated option with address mask bugfix [\#756](https://github.com/puppetlabs/puppetlabs-firewall/pull/756) ([mirekys](https://github.com/mirekys))
+- \(MODULES-2119\) iptables delete -p all exception [\#749](https://github.com/puppetlabs/puppetlabs-firewall/pull/749) ([mikkergimenez](https://github.com/mikkergimenez))
+
+## 1.12.0
+### Summary
+This release uses the PDK convert functionality which in return makes the module PDK compliant. It also includes a roll up of maintenance changes.
+
+#### Added
+- PDK convert firewall ([MODULES-6455](https://tickets.puppet.com/browse/MODULES-6455)).
+- Modulesync updates.
+
+### Fixed
+- Set correct `seluser` for CentOS/RHEL 5.x ([MODULES-6092](https://tickets.puppet.com/browse/MODULES-6092)).
+- Fix error parsing rules with dashes in the chain name ([MODULES-6261](https://tickets.puppet.com/browse/MODULES-6261)).
+- Changes to address additional Rubocop failures.
+- (maint) Addressing puppet-lint doc warnings.
+
+## Supported Release 1.11.0
+### Summary
+This release is to implement Rubocop changes within the module.
+
+#### Added
+- Rubocop has been implemented in the module.
+
+### Changed
+- Module sync was updated.
+- Unparsable rules are now skipped with a warning.
+
+## Supported Release 1.10.0
+### Summary
+This is a clean release prior to the module being run through rubocop.
+
+#### Added
+- Hashlimit module added.
+- Firewall multi notes added.
+- Gidd lookup now added.
+- Simple sanity check added to hash parser rule.
+
+### Changed
+- Version requirement has been updated.
+- An array is no lnger accepted for icmp types.
+- UNTRACKED is now considered to be a valid state.
+- Modulesync updates.
+- ip6tables can be disabled.
+- Readme format has been fixed.
+- Fixes made to accomodate Puppet lint.
+- Fix to regex i 'connlimit_spec.rb' and 'firewall_spec.rb'.
+- General test fixes.
+- Negated match sets know properly dealt with.
+- Correct IP version for hostname resolution now chosen.
+- Unmanaged rule regex regarding iptable has been fixed.
+
+### Removed
+- Ubuntu 10.04 and 12.04 removed.
+
+## Supported Release 1.9.0
+### Summary
+This release includes several bugfixes and NFLOG support.
+
+#### Added
+- Support for NFLOG including the `NFLOG` jump target and four commandline options ([FM-4896](https://tickets.puppetlabs.com/browse/FM-4896))
+- Support for the geoip module ([MODULES-4279](https://tickets.puppetlabs.com/browse/MODULES-4279))
+- Management of the ebtables package
+
+#### Fixed
+- iptables parser fails with "Invalid address from IPAddr.new: -m" ([MODULES-4234](https://tickets.puppetlabs.com/browse/MODULES-4234))
+- selinux context for iptables configuration
+- Replace Puppet.version.to_f with Puppet::Util::Package.versioncmp ( [MODULES-4528](https://tickets.puppetlabs.com/browse/MODULES-4528))
+
+## Supported Release 1.8.2
+### Summary
+This release includes numerous features and bugfixes, See below.
+
+#### Bugfixes
+- Fixing issue with double quotes being removed when part of the rule comment
+- Add the --wait flag to the insert/update/delete iptables actions to prevent failures from occuring when iptables is running outside of puppet for iptables >= 1.4.20
+- Fix iptables_version and ip6tables_version facts not returning the version
+
+#### Features
+- Support for multiple IP sets in a single rule
+- Implement queue_bypass and queue_num parameters for NFQUEUE jump target
+- Tighten SELinux permissions on persistent files
+- RHEL7 SELinux support for puppet 3
+- Manage ip6tables service for Redhat Family
+
+## Supported Release 1.8.1
+### Summary
+This release documents an important issue with mcollective that may impact users of the firewall module. Workarounds are suggested as part of this advisory until mcollective can be patched.
+
+#### Bugfixes
+- Add mcollective rule-reversal known limitation
+
+## Supported Release 1.8.0
+### Summary
+
+This release includes numerous features, bugfixes and other improvements including better handling when trying to delete already absent rules.
+
+#### Features
+- Added new 'pkg_ensure' parameter to allow the updating of the iptables package.
+- Added new 'log_uid' property.
+- Added 'sctp' to the 'proto' property.
+- Added support for IPv6 NAT in Linux kernels >= 3.7.
+- Added support for the security table.
+
+#### Bugfixes
+- (MODULES-2783) Replaced hardcoded iptables service references with $service_name variable.
+- (MODULES-1341) Recover when deleting absent rules.
+- (MODULES-3032) Facter flush is called to clear Facter cache get up to date value for ':iptables_persistent_version'.
+- (MODULES-2159) Fixed idempotency issue when using connlimit.
+- Fixed the handling of chain names that contain '-f'.
+
+#### Improvements
+- Numerous unit and acceptance test improvements.
+- Improved handling/use of the '$::iptables_persistent_version' custom fact.
+- Better handling of operating systems that use SELinux.
+
 ## Supported Release 1.7.2
-###Summary
+### Summary
 
 Small release for support of newer PE versions. This increments the version of PE in the metadata.json file.
 
-##2015-08-25 - Supported Release 1.7.1
-###Summary
+## 2015-08-25 - Supported Release 1.7.1
+### Summary
 
 This is a bugfix release to deprecate the port parameter. Using the unspecific 'port' parameter can lead to firewall rules that are unexpectedly too lax. It is recommended to always use the specific dport and sport parameters to avoid this ambiguity.
 
-####Bugfixes
+#### Bugfixes
 - Deprecate the port parameter
 
-##2015-07-28 - Supported Release 1.7.0
-###Summary
+## 2015-07-28 - Supported Release 1.7.0
+### Summary
 
 This release includes numerous features, bugfixes and other improvements including Puppet 4 & PE 2015.2 support as well as ClusterIP and DSCP jump target support.
 
-####Features
+#### Features
 - Puppet 4 and PE 2015.2 official support
 - ClusterIP jump target (including options) now supported
 - DSCP jump target (including options) now supported
 - SLES 10 now compatible (but not supported)
 
-####Bugfixes
+#### Bugfixes
 - (MODULES-1967) Parse escape sequences from iptables
 - (MODULES-1592) Allow src_type and dst_type prefixed with '!' to pass validation
 - (MODULES-2186) - iptables rules with -A in comment now supported
@@ -30,18 +175,18 @@ This release includes numerous features, bugfixes and other improvements includi
 - Fix installation hang on Debian Jessie
 - Fix for physdev idempotency on EL5
 
-####Improvements
+#### Improvements
 - Documentation improvements
 - Enforce the seluser on selinux systems
 - All the relevent services are now autorequired by the firewall and firewallchain types
 - Replace Facter.fact().value() calls with Facter.value() to support Facter 3
 
-##2015-05-19 - Supported Release 1.6.0
-###Summary
+## 2015-05-19 - Supported Release 1.6.0
+### Summary
 
 This release includes support for TEE, MSS, the time ipt module, Debian 8 support, and a number of test fixes and other improvements.
 
-####Features
+#### Features
 - Add TEE support
 - Add MSS support (including clamp-mss-to-pmtu support)
 - Add support for the time ipt module (-m time)
@@ -51,35 +196,35 @@ This release includes support for TEE, MSS, the time ipt module, Debian 8 suppor
 - Add support for new 'match_mark' property
 - Added 'ipv4' and 'ipv6' options to 'proto' property
 
-####Bugfixes
+#### Bugfixes
 - Fix for Systemd-based OSes where systemd needs restarted before being able to pick up new services (MODULES-1984)
 - Arch Linux package management fix
 
-##2015-03-31 - Supported Release 1.5.0
-###Summary
+## 2015-03-31 - Supported Release 1.5.0
+### Summary
 
 This release includes physdev_is_bridged support, checksum_fill support, basic Gentoo compatibility, and a number of test fixes and improvements.
 
-####Features
+#### Features
 - Add `physdev_is_bridged` support
 - Add `checksum_fill` support
 - Add basic Gentoo compatibility (unsupported)
 
-####Bugfixes
+#### Bugfixes
 - Implementation for resource map munging to allow a single ipt module to be used multiple times in a single rule on older versions of iptables (MODULES-1808)
 - Test fixes
 
-##2015-01-27 - Supported Release 1.4.0
-###Summary
+## 2015-01-27 - Supported Release 1.4.0
+### Summary
 
 This release includes physdev support, the ability to look up usernames from uuid, and a number of bugfixes
 
-####Features
+#### Features
 - Add `netmap` feature
 - Add `physdev` support
 - Add ability to look up username from uuid (MODULES-753, MODULES-1688)
 
-####Bugfixes
+#### Bugfixes
 - Sync iptables/ip6tables providers (MODULES-1612)
 - Fix package names for Amazon and Ubuntu 14.10 (MODULES-1029)
 - Fix overly aggressive gsub when `ensure => absent` (MODULES-1453)
@@ -87,27 +232,27 @@ This release includes physdev support, the ability to look up usernames from uui
 - Fix ip6tables provider when `iptables-ipv6` package isn't installed for EL6 (MODULES-633)
 - Test fixes
 
-##2014-12-16 - Supported Release 1.3.0
-###Summary
+## 2014-12-16 - Supported Release 1.3.0
+### Summary
 
 This release includes a number of bugfixes and features, including fixing `tcp_flags` support, and added support for interface aliases, negation for iniface and outiface, and extra configurability for packages and service names.
 
-####Features
+#### Features
 - Add support for interface aliases (eth0:0) (MODULES-1469)
 - Add negation for iniface, outiface (MODULES-1470)
 - Make package and service names configurable (MODULES-1309)
 
-####Bugfixes
+#### Bugfixes
 - Fix test regexes for EL5 (MODULES-1565)
 - Fix `tcp_flags` support for ip6tables (MODULES-556)
 - Don't arbitrarily limit `set_mark` for certain chains
 
-##2014-11-04 - Supported Release 1.2.0
-###Summary
+## 2014-11-04 - Supported Release 1.2.0
+### Summary
 
 This release has a number of new features and bugfixes, including rule inversion, future parser support, improved EL7 support, and the ability to purge ip6tables rules.
 
-####Features
+#### Features
 - Documentation updates!
 - Test updates!
 - Add ipset support
@@ -119,33 +264,33 @@ This release has a number of new features and bugfixes, including rule inversion
 - Add support for mac address source rules
 - Add cbt protocol
 
-####Bugfixes
+#### Bugfixes
 - Incorrect use of `source => :iptables` in the ip6tables provider was making it impossible to purge ip6tables rules (MODULES-41)
 - Don't require `toports` when `jump => 'REDIRECT'` (MODULES-1086)
 - Don't limit which chains iniface and outiface parameters can be used in
 - Don't fail on rules added with ipsec/strongswan (MODULES-796)
 
-##2014-07-08 - Supported Release 1.1.3
-###Summary
+## 2014-07-08 - Supported Release 1.1.3
+### Summary
 This is a supported release with test coverage enhancements.
 
-####Bugfixes
+#### Bugfixes
 - Confine to supported kernels
 
-##2014-06-04 - Release 1.1.2
-###Summary
+## 2014-06-04 - Release 1.1.2
+### Summary
 
 This is a release of the code previously released as 1.1.1, with updated metadata.
 
 ## 2014-05-16 Release 1.1.1
-###Summary
+### Summary
 
 This release reverts the alphabetical ordering of 1.1.0.  We found this caused
 a regression in the Openstack modules so in the interest of safety we have
 removed this for now.
 
 ## 2014-05-13 Release 1.1.0
-###Summary
+### Summary
 
 This release has a significant change from previous releases; we now apply the
 firewall resources alphabetically by default, removing the need to create pre
@@ -159,13 +304,13 @@ intended) versions of iptables, as well as connlimit and connmark.  This
 release has been validated against Ubuntu 14.04 and RHEL7 and should be fully
 working on those platforms.
 
-####Features
+#### Features
 
-- Apply firewall resources alphabetically. 
+- Apply firewall resources alphabetically.
 - Add support for connlimit and connmark.
 - Add `mask` as a parameter. (Used exclusively with the recent parameter).
 
-####Bugfixes
+#### Bugfixes
 
 - Add systemd support for RHEL7.
 - Replace &&'s with the correct and in manifests.
@@ -174,38 +319,38 @@ working on those platforms.
 - Fix boolean flag tests.
 - Fix DNAT->SNAT typo in an error message.
 
-####Known Bugs
+#### Known Bugs
 
 * For Oracle, the `owner` and `socket` parameters require a workaround to function. Please see the Limitations section of the README.
 
 
 ## 2014-03-04 Supported Release 1.0.2
-###Summary
+### Summary
 
 This is a supported release.  This release removes a testing symlink that can
 cause trouble on systems where /var is on a seperate filesystem from the
 modulepath.
 
-####Features
-####Bugfixes
-####Known Bugs
+#### Features
+#### Bugfixes
+#### Known Bugs
 
 * For Oracle, the `owner` and `socket` parameters require a workaround to function. Please see the Limitations section of the README.
 
 ### Supported release - 2014-03-04 1.0.1
 
-####Summary
+#### Summary
 
 An important bugfix was made to the offset calculation for unmanaged rules
 to handle rules with 9000+ in the name.
 
-####Features
+#### Features
 
-####Bugfixes
+#### Bugfixes
 - Offset calculations assumed unmanaged rules were numbered 9000+.
 - Gracefully fail to manage ip6tables on iptables 1.3.x
 
-####Known Bugs
+#### Known Bugs
 
 * For Oracle, the `owner` and `socket` parameters require a workaround to function. Please see the Limitations section of the README.
 
@@ -569,3 +714,9 @@ Initial release.
 * (#9576) Stub provider so it works properly outside of Linux
 * (#9576) Align spec framework with Puppet core
 * and lots of other earlier development tasks ...
+
+
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
+
+
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*

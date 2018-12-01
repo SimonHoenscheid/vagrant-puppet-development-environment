@@ -18,6 +18,7 @@ define apt::source(
   $key_content       = undef,
   $key_source        = undef,
   $trusted_source    = undef,
+  $notify_update     = true,
 ) {
   validate_string($architecture, $comment, $location, $repos)
   validate_bool($allow_unsigned)
@@ -29,15 +30,15 @@ define apt::source(
   $_before = Apt::Setting["list-${title}"]
 
   if $include_src != undef {
-    warning("\$include_src is deprecated and will be removed in the next major release, please use \$include => { 'src' => ${include_src} } instead")
+    deprecation('apt $include_src', "\$include_src is deprecated and will be removed in the next major release, please use \$include => { 'src' => ${include_src} } instead")
   }
 
   if $include_deb != undef {
-    warning("\$include_deb is deprecated and will be removed in the next major release, please use \$include => { 'deb' => ${include_deb} } instead")
+    deprecation('apt $include_deb', "\$include_deb is deprecated and will be removed in the next major release, please use \$include => { 'deb' => ${include_deb} } instead")
   }
 
   if $required_packages != undef {
-    warning('$required_packages is deprecated and will be removed in the next major release, please use package resources instead.')
+    deprecation('apt $required_packages', '$required_packages is deprecated and will be removed in the next major release, please use package resources instead.')
     exec { "Required packages: '${required_packages}' for ${name}":
       command     => "${::apt::params::provider} -y install ${required_packages}",
       logoutput   => 'on_failure',
@@ -49,19 +50,19 @@ define apt::source(
   }
 
   if $key_server != undef {
-    warning("\$key_server is deprecated and will be removed in the next major release, please use \$key => { 'server' => ${key_server} } instead.")
+    deprecation('apt $key_server', "\$key_server is deprecated and will be removed in the next major release, please use \$key => { 'server' => ${key_server} } instead.")
   }
 
   if $key_content != undef {
-    warning("\$key_content is deprecated and will be removed in the next major release, please use \$key => { 'content' => ${key_content} } instead.")
+    deprecation('apt $key_content', "\$key_content is deprecated and will be removed in the next major release, please use \$key => { 'content' => ${key_content} } instead.")
   }
 
   if $key_source != undef {
-    warning("\$key_source is deprecated and will be removed in the next major release, please use \$key => { 'source' => ${key_source} } instead.")
+    deprecation('apt $key_source', "\$key_source is deprecated and will be removed in the next major release, please use \$key => { 'source' => ${key_source} } instead.")
   }
 
   if $trusted_source != undef {
-    warning('$trusted_source is deprecated and will be removed in the next major release, please use $allow_unsigned instead.')
+    deprecation('apt $trusted_source', '$trusted_source is deprecated and will be removed in the next major release, please use $allow_unsigned instead.')
     $_allow_unsigned = $trusted_source
   } else {
     $_allow_unsigned = $allow_unsigned
@@ -114,16 +115,17 @@ define apt::source(
   }
 
   apt::setting { "list-${name}":
-    ensure  => $ensure,
-    content => template('apt/_header.erb', 'apt/source.list.erb'),
+    ensure        => $ensure,
+    content       => template('apt/_header.erb', 'apt/source.list.erb'),
+    notify_update => $notify_update,
   }
 
   if $pin {
     if is_hash($pin) {
       $_pin = merge($pin, { 'ensure' => $ensure, 'before' => $_before })
     } elsif (is_numeric($pin) or is_string($pin)) {
-      $url_split = split($location, '/')
-      $host      = $url_split[2]
+      $url_split = split($location, '[:\/]+')
+      $host      = $url_split[1]
       $_pin = {
         'ensure'   => $ensure,
         'priority' => $pin,

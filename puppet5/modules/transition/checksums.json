@@ -1,0 +1,8 @@
+{
+  "CHANGELOG.md": "6ee51f82dd81a0e59e8308d396651907",
+  "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+  "README.md": "6e55100343fc750418603577dba998c6",
+  "lib/puppet/provider/transition/ruby.rb": "265d8c27a9a512fb3ea775a1b96563f6",
+  "lib/puppet/type/transition.rb": "0e38333560f3e2f9156c46b3dcc218cb",
+  "metadata.json": "699df3e429b4d62b1f657291707f3d17"
+}
