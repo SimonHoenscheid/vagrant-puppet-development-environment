@@ -14,7 +14,6 @@ read PUPPETVERSION
 
 echo 'Please Enter the OS you want to use on the clientside. Type'
 echo 'c7 for CentOS 7'
-echo 'd7 for Debian 7'
 echo 'd8 for Debian 8'
 echo 'd9 for Debian 9'
 echo 'u12 for Ubuntu 1204 LTS'

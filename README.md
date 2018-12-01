@@ -6,24 +6,20 @@
 
 ##What
 
-* Puppet4 Support
-* Puppet3 Support
+* Puppet5 Support
 
 ## MASTERS
-* Debian 8 based
+* Debian 9 based
 
 
 ## OS IMAGES AVAILABLE FOR CLIENTS
 
-* Debian 7
 * Debian 8
-* Centos 6
+* Debian 9
 * Centos 7
-* Oracle Enterprise linux 6
-* Oracle Enterprise linux 7
-* Ubuntu 12.04 LTS
 * Ubuntu 14.04 LTS
 * Ubuntu 16.04 LTS
+* Ubuntu 18.04 LTS
 
 ##Requirements
 
@@ -33,7 +29,7 @@
 		
 * vagrant
 * virtual box
-* 3-5 GB of RAM
+* 4+ GB of RAM
 
 Setup a Puppet Environment:
 	
@@ -95,21 +91,10 @@ Add up to five clients.
 **connect different OS Clients to puppetmaster**
 
 1. go to clients directory
-2. choose the OS with the matching puppet version (p3 =Puppet3, p4=Puppet4)
-3. boxes puppetclient0{1-5} are prepared for each OS.
+2. choose the OS with the matching puppet version (p5 =Puppet5)
+3. boxes puppetclient0{1-10} are prepared for each OS.
 4. execute vagrant global-status
 5. start up the next box in a row:
 6. vagrant up puppetclient0n
 
-##TODO
-
-* get rid of puppet deprecation warnings for the Puppet3 agents (roll out new config)
-* setup puppetexplorer node
-* setup foreman node (will not work with Puppet 4 atm)
-* cleanup code
-* do more things in puppetcode, less in scripts
-
-
-##FIXED
-* fix the puppetmaster -> puppetdb communication bug with Puppet3 [Bug] (https://github.com/SimonHoenscheid/vagrant-puppet-development-environment/issues/1)
 
